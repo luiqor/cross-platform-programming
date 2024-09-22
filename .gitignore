@@ -485,6 +485,7 @@ $RECYCLE.BIN/
 
 
 ### VisualStudioCode ###
+.vscode/
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -502,3 +503,6 @@ $RECYCLE.BIN/
 # Ignore all local history of files
 .history
 .ionide
+
+# Ignore all folders within the assets directory
+assets/*/
