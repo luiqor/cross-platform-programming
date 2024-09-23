@@ -4,37 +4,33 @@
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
   </PropertyGroup>
   
-  <Target Name="Build" DependsOnTargets="GetProjectList">
-    <ItemGroup>
-      <ProjectToBuild Include="@(ProjectFile)" />
-    </ItemGroup>
-    <MSBuild Projects="@(ProjectToBuild)" Targets="Restore" StopOnFirstFailure="true" />
-    <MSBuild Projects="@(ProjectToBuild)" Targets="Build" StopOnFirstFailure="true" />
-  </Target>
-
   <Target Name="GetProjectList">
     <ItemGroup>
-      <ProjectFile Include="$(SolutionDir)**\*.csproj" />
+      <AllProjects Include="$(SolutionDir)**\*.csproj" />
+      <NonTestProjects Include="@(AllProjects)" Exclude="**\*.Test.csproj" />
+      <TestProjects Include="@(AllProjects)" Condition="$([System.String]::Copy('%(Filename)').EndsWith('.Test'))" />
     </ItemGroup>
-    <Message Text="Available projects:" Importance="high" />
-    <Message Text="%(ProjectFile.Filename)" Importance="high" />
+    <Message Text="Available non-test projects:" Importance="high" />
+    <Message Text="%(NonTestProjects.Filename)" Importance="high" />
+    <Message Text="Available test projects:" Importance="high" />
+    <Message Text="%(TestProjects.Filename)" Importance="high" />
+  </Target>
+
+  <Target Name="Build" DependsOnTargets="GetProjectList">
+    <MSBuild Projects="@(NonTestProjects)" Targets="Restore" StopOnFirstFailure="true" />
+    <MSBuild Projects="@(NonTestProjects)" Targets="Build" StopOnFirstFailure="true" />
   </Target>
 
   <Target Name="Test" DependsOnTargets="GetProjectList">
     <PropertyGroup>
-      <TestCommand>dotnet test "%(ProjectFile.RootDir)%(ProjectFile.Directory)Test" --logger "console;verbosity=detailed"</TestCommand>
+      <TestCommand>dotnet test "%(TestProjects.FullPath)" --logger "console;verbosity=detailed"</TestCommand>
     </PropertyGroup>
-    <Exec Command="$(TestCommand)" WorkingDirectory="$(SolutionDir)" 
-          Condition="Exists('%(ProjectFile.RootDir)%(ProjectFile.Directory)Test')" 
-          ContinueOnError="true" />
-    <Message Text="No Test folder found for %(ProjectFile.Filename)" 
-             Condition="!Exists('%(ProjectFile.RootDir)%(ProjectFile.Directory)Test')" 
-             Importance="high" />
+    <Exec Command="$(TestCommand)" WorkingDirectory="$(SolutionDir)" ContinueOnError="true" />
   </Target>
 
   <Target Name="Run" DependsOnTargets="GetProjectList">
     <PropertyGroup>
-      <RunCommand>dotnet run --project "%(ProjectFile.FullPath)" --no-build</RunCommand>
+      <RunCommand>dotnet run --project "%(NonTestProjects.FullPath)"</RunCommand>
     </PropertyGroup>
     <Exec Command="$(RunCommand)" WorkingDirectory="$(SolutionDir)" />
   </Target>
