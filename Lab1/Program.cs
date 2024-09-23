@@ -2,16 +2,22 @@
 using Lab1.ConstantsSets;
 using Lab1.Validation;
 
-class Program
+namespace Lab1;
+public class Program
 {
-    static void Main()
+    public static void Main()
     {
         string baseDirectory = Environment.CurrentDirectory;
         string inputFilePath = Path.Combine(baseDirectory, "assets", "input.txt");
         string outputFilePath = Path.Combine(baseDirectory, "assets", "output.txt");
 
-        DataValidator.Validate(() => DataValidator.ValidateFiles(inputFilePath, outputFilePath));
+        int processedData = ProcessData(inputFilePath);
+        File.WriteAllText(outputFilePath, processedData.ToString());
+    }
 
+    public static int ProcessData(string inputFilePath)
+    {
+        DataValidator.Validate(() => DataValidator.ValidateFiles(inputFilePath, string.Empty));
 
         string[] input = File.ReadAllLines(inputFilePath);
 
@@ -26,8 +32,6 @@ class Program
 
         DataValidator.Validate(() => DataValidator.ValidatePermutationData(totalElementsCount, placementLength, placementElements));
 
-        int permutationPosition = PermutationService.GetLexicographicPosition(totalElementsCount, placementLength, placementElements);
-
-        File.WriteAllText(outputFilePath, permutationPosition.ToString());
+        return PermutationService.GetLexicographicPosition(totalElementsCount, placementLength, placementElements);
     }
 }

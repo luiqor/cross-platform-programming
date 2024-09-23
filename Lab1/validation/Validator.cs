@@ -28,7 +28,7 @@ public static class DataValidator
             return true;
         }
 
-        if (Path.GetFullPath(inputFilePath) == Path.GetFullPath(outputFilePath))
+        if (File.Exists(outputFilePath) && Path.GetFullPath(inputFilePath) == Path.GetFullPath(outputFilePath))
         {
             Console.Error.WriteLine("Input and output files must be different.");
             return true;
