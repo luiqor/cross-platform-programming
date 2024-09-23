@@ -1,4 +1,5 @@
 ﻿using Lab1;
+using Lab1.ConstantsSets;
 
 class Program
 {
@@ -8,10 +9,13 @@ class Program
         string outputFilePath = Path.Combine("assets", "output.txt");
 
         string[] input = File.ReadAllLines(inputFilePath);
-        string[] firstLine = input[0].Split();
-        int totalElementsCount = int.Parse(firstLine[0]);
-        int placementLength = int.Parse(firstLine[1]);
-        int[] placementElements = Array.ConvertAll(input[1].Split(), int.Parse);
+
+        string[] firstLineElements = input[TextfileLineIndex.KAndN].Split();
+        int totalElementsCount = int.Parse(firstLineElements[LineElementIndex.ValueN]);
+        int placementLength = int.Parse(firstLineElements[LineElementIndex.ValueK]);
+
+        string[] secondLineElements = input[TextfileLineIndex.PlacementElements].Split();
+        int[] placementElements = Array.ConvertAll(secondLineElements, int.Parse);
 
         int permutationPosition = PermutationService.GetLexicographicPosition(totalElementsCount, placementLength, placementElements);
 
