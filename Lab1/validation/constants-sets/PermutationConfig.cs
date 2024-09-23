@@ -1,4 +1,4 @@
-namespace Lab1.ConstantsSets;
+namespace Lab1.Validation.ConstantsSets;
 
 public class PermutationConfig
 {

@@ -1,4 +1,4 @@
-using Lab1.ConstantsSets;
+using Lab1.Validation.ConstantsSets;
 
 namespace Lab1.Validation;
 
