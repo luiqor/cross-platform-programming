@@ -1,8 +1,14 @@
+using Lab1.ConstantsSets;
+
 namespace Lab1.Validation;
 
 public static class DataValidator
 {
+    private const int SuccessfulExitCode = 0;
+
+
     public delegate bool ValidatorCallback();
+
 
     public static void Validate(ValidatorCallback callback)
     {
@@ -10,7 +16,7 @@ public static class DataValidator
 
         if (isError)
         {
-            Environment.Exit(0);
+            Environment.Exit(SuccessfulExitCode);
         }
     }
 
@@ -39,7 +45,7 @@ public static class DataValidator
             return true;
         }
 
-        if (placementLength < 1 || totalElementsCount > 12)
+        if (placementLength < PermutationConfig.MinValue || totalElementsCount > PermutationConfig.MaxValue)
         {
             Console.Error.WriteLine("The length of the permutation must be greater than 0 and less than or equal to 12.");
             return true;
@@ -51,7 +57,7 @@ public static class DataValidator
             return true;
         }
 
-        if (placementElements.Any((element) => element < 1 || element > totalElementsCount))
+        if (placementElements.Any((elementValue) => elementValue < PermutationConfig.MinPlacementElementValue || elementValue > totalElementsCount))
         {
             Console.Error.WriteLine("The elements of the permutation must be greater than 0 and less than or equal to the number of elements in the set.");
             return true;
@@ -63,7 +69,7 @@ public static class DataValidator
 
     public static bool ValidateInputFile(string[] input)
     {
-        if (input.Length < 2)
+        if (input.Length < PermutationConfig.ValuesLinesQuantity)
         {
             Console.Error.WriteLine("The input file must contain two lines.");
             return true;
