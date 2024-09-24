@@ -1,8 +1,5 @@
-# cross platform programming assigments repository
-Group: IPZ-34ms
-
-Assigment №21
-
+# Cross-platform programming assigments repository
+Group: IPZ-34ms Var №21
 
 ## Usage
 ```sh
@@ -16,3 +13,6 @@ dotnet msbuild -t:Build
 dotnet msbuild -t:Test
 
 ```
+
+## Done
+- [x] Lab1, Lab1.Test
