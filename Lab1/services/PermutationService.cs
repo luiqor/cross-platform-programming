@@ -4,7 +4,7 @@ public static class PermutationService
 {
     private const int ZeroBasedOffset = 1;
 
-    private static int GetFactorial(int value)
+    public static int GetFactorial(int value)
     {
         return value == 0 || value == 1 ? 1 : value * GetFactorial(value - 1);
     }
