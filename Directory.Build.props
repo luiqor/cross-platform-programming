@@ -3,6 +3,10 @@
     <SolutionDir>$(MSBuildThisFileDirectory)</SolutionDir>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <OutputPath>$(SolutionDir)builds\</OutputPath>
+  </PropertyGroup>
   
   <Target Name="GetProjectList">
     <ItemGroup>
@@ -18,7 +22,7 @@
 
   <Target Name="Build" DependsOnTargets="GetProjectList">
     <MSBuild Projects="@(NonTestProjects)" Targets="Restore" StopOnFirstFailure="true" />
-    <MSBuild Projects="@(NonTestProjects)" Targets="Build" StopOnFirstFailure="true" />
+    <MSBuild Projects="@(NonTestProjects)" Targets="Build" Properties="OutputPath=$(OutputPath)" StopOnFirstFailure="true" />
   </Target>
 
   <Target Name="Test" DependsOnTargets="GetProjectList">
