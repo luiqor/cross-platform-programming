@@ -17,4 +17,14 @@ public class CalculateTimeServiceTest : IDisposable
 
         Assert.Equal(45296, result);
     }
+
+    [Fact]
+    public void ConvertSecondsToTime_ValidSeconds_ReturnsCorrectTime()
+    {
+        int totalSeconds = 45296;
+
+        string result = CalculateTimeService.ConvertSecondsToTime(totalSeconds);
+
+        Assert.Equal("12:34:56", result);
+    }
 }
