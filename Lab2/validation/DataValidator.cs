@@ -42,7 +42,7 @@ public static partial class DataValidator
     {
         if (!int.TryParse(line, out int _))
         {
-            return "Number of times must be an integer.";
+            return "Number of times must be a whole number.";
         }
 
         return null;
@@ -52,7 +52,7 @@ public static partial class DataValidator
     {
         if (times > TimeConfig.MaxTimes)
         {
-            return "Number of times must be less than or equal to 50000.";
+            return $"Number of times must be less than or equal to {TimeConfig.MaxTimes}.";
         }
 
         return null;
@@ -81,17 +81,17 @@ public static partial class DataValidator
 
             if (hours < TimeConfig.MinHours || hours > TimeConfig.MaxHours)
             {
-                return $"Invalid time value: {time}. Hours should be between 1 and 12.";
+                return $"Invalid time value: {time}. Hours should be between {TimeConfig.MinHours} and {TimeConfig.MaxHours}.";
             }
 
             if (minutes < TimeConfig.MinMinutes || minutes > TimeConfig.MaxMinutes)
             {
-                return $"Invalid time value: {time}. Minutes should be between 0 and 59.";
+                return $"Invalid time value: {time}. Minutes should be between {TimeConfig.MinMinutes} and {TimeConfig.MaxMinutes}.";
             }
 
             if (seconds < TimeConfig.MinSeconds || seconds > TimeConfig.MaxSeconds)
             {
-                return $"Invalid time value: {time}. Seconds should be between 0 and 59.";
+                return $"Invalid time value: {time}. Seconds should be between {TimeConfig.MinSeconds} and {TimeConfig.MaxSeconds}.";
             }
         }
 
