@@ -20,7 +20,7 @@ public static class CalculateTimeService
 
     public static string ConvertSecondsToTime(int totalSeconds)
     {
-        int hours = totalSeconds / TimeInTime.SecondsInHour % TimeInTime.HoursInHalfDay;
+        int hours = totalSeconds / TimeInTime.SecondsInHour;
 
         if (hours == NoTime)
         {
