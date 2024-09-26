@@ -8,17 +8,17 @@ public static class CalculateTimeService
     private const int NoTime = 0;
 
 
-    private static int ConvertTimeToSeconds(string time)
+    public static int ConvertTimeToSeconds(string time)
     {
         int[] timeParts = time.Split(":").Select(int.Parse).ToArray();
-        int hours = timeParts[TimePartIndex.Hours] % TimeInTime.HoursInHalfDay;
+        int hours = timeParts[TimePartIndex.Hours];
         int minutes = timeParts[TimePartIndex.Minutes];
         int seconds = timeParts[TimePartIndex.Seconds];
 
         return hours * TimeInTime.SecondsInHour + minutes * TimeInTime.SecondsInMinute + seconds;
     }
 
-    private static string ConvertSecondsToTime(int totalSeconds)
+    public static string ConvertSecondsToTime(int totalSeconds)
     {
         int hours = totalSeconds / TimeInTime.SecondsInHour % TimeInTime.HoursInHalfDay;
 
