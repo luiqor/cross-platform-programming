@@ -1,4 +1,4 @@
-namespace Lab2.Services.ConstantsSets;
+namespace Lab2.ConstantsSets;
 
 public class TimePartIndex
 {

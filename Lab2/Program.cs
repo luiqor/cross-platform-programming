@@ -1,4 +1,5 @@
 ﻿using Lab2.Services;
+using Lab2.Validation;
 
 namespace Lab2;
 
@@ -22,9 +23,18 @@ class Program
     public static string ProcessData(string inputFilePath)
     {
         string[] input = File.ReadAllLines(inputFilePath);
+        DataValidator.Validate(() => DataValidator.ValidateInputFile(inputFilePath));
 
-        int numberOfTimes = int.Parse(input[NumberOfTimesLineIndex]);
-        string[] times = input.Skip(LinesToSkipBeforeTimes).Take(numberOfTimes).ToArray();
+        string numberOfTimesLine = input[NumberOfTimesLineIndex];
+        DataValidator.Validate(() => DataValidator.ValidateNumberOfTimesLine(numberOfTimesLine));
+
+        int numberOfTimes = int.Parse(numberOfTimesLine);
+        DataValidator.Validate(() => DataValidator.ValidateNumberOfTimes(numberOfTimes));
+
+        string[] times = input.Skip(LinesToSkipBeforeTimes)
+            .Where(line => !string.IsNullOrWhiteSpace(line))
+            .ToArray();
+        DataValidator.Validate(() => DataValidator.ValidateTimes(times, numberOfTimes));
 
         return CalculateTimeService.CalculateMinimumAdjustmentTime(times);
     }
