@@ -3,7 +3,7 @@ using Lab2.Validation;
 
 namespace Lab2;
 
-class Program
+public static class Program
 {
     private const int NumberOfTimesLineIndex = 0;
     private const int LinesToSkipBeforeTimes = 1;
