@@ -2,40 +2,28 @@
   <PropertyGroup>
     <SolutionDir>$(MSBuildThisFileDirectory)</SolutionDir>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <OutputPath>$(SolutionDir)builds\</OutputPath>
   </PropertyGroup>
   
-  <Target Name="GetProjectList">
+  <Target Name="GetProjectList" Condition="'$(AllProjects)' == ''">
     <ItemGroup>
       <AllProjects Include="$(SolutionDir)**\*.csproj" />
-      <NonTestProjects Include="@(AllProjects)" Exclude="**\*.Test.csproj" />
-      <TestProjects Include="@(AllProjects)" Condition="$([System.String]::Copy('%(Filename)').EndsWith('.Test'))" />
+      <NonTestProjects Include="@(AllProjects)" Exclude="**/*.Test.csproj" />
+      <TestProjects Include="@(AllProjects)" Condition="$([System.String]::Copy('%(Filename)').Contains('.Test'))" />
     </ItemGroup>
-    <Message Text="Available non-test projects:" Importance="high" />
-    <Message Text="%(NonTestProjects.Filename)" Importance="high" />
-    <Message Text="Available test projects:" Importance="high" />
-    <Message Text="%(TestProjects.Filename)" Importance="high" />
+
+    <PropertyGroup>
+      <AllProjects>@(AllProjects)</AllProjects>
+      <NonTestProjects>@(NonTestProjects)</NonTestProjects>
+      <TestProjects>@(TestProjects)</TestProjects>
+    </PropertyGroup>
   </Target>
 
   <Target Name="Build" DependsOnTargets="GetProjectList">
-    <MSBuild Projects="@(NonTestProjects)" Targets="Restore" StopOnFirstFailure="true" />
-    <MSBuild Projects="@(NonTestProjects)" Targets="Build" Properties="OutputPath=$(OutputPath)" StopOnFirstFailure="true" />
+    <MSBuild Projects="@(NonTestProjects)" Targets="Restore;Build" Properties="OutputPath=$(OutputPath)" StopOnFirstFailure="true" />
   </Target>
 
   <Target Name="Test" DependsOnTargets="GetProjectList">
-    <PropertyGroup>
-      <TestCommand>dotnet test "%(TestProjects.FullPath)" --logger "console;verbosity=detailed"</TestCommand>
-    </PropertyGroup>
-    <Exec Command="$(TestCommand)" WorkingDirectory="$(SolutionDir)" ContinueOnError="true" />
-  </Target>
-
-  <Target Name="Run" DependsOnTargets="GetProjectList">
-    <PropertyGroup>
-      <RunCommand>dotnet run --project "%(NonTestProjects.FullPath)"</RunCommand>
-    </PropertyGroup>
-    <Exec Command="$(RunCommand)" WorkingDirectory="$(SolutionDir)" />
+    <Exec Command='dotnet test "%(TestProjects.FullPath)"' Condition="'%(TestProjects.FullPath)' != ''" ContinueOnError="true" />
   </Target>
 </Project>
