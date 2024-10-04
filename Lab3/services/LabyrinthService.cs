@@ -8,6 +8,8 @@ class LabyrinthService
 {
     private const int LastIndexOffset = 1;
     private const int NotFound = -1;
+
+
     public static int FindPrincess(Labyrinth labyrinth)
     {
         (int, int, int) start = FindStart(labyrinth);
@@ -50,7 +52,7 @@ class LabyrinthService
         return NotFound;
     }
 
-    static (int, int, int) FindStart(Labyrinth labyrinth)
+    private static (int, int, int) FindStart(Labyrinth labyrinth)
     {
         for (int i = 0; i < labyrinth.H; i++)
         {
@@ -71,7 +73,7 @@ class LabyrinthService
         return (NotFound, NotFound, NotFound);
     }
 
-    static bool IsValidMove(Labyrinth labyrinth, int x, int y, int z)
+    private static bool IsValidMove(Labyrinth labyrinth, int x, int y, int z)
     {
         return x >= 0 && x < labyrinth.H && y >= 0 && y < labyrinth.M && z >= 0 && z < labyrinth.N && labyrinth.Grid[x, y, z] != LabyrinthCode.Wall;
     }

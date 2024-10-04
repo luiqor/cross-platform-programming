@@ -23,7 +23,9 @@ class Program
         int[] dimensions = lines[0].Split().Select(int.Parse).ToArray();
         DataValidator.Validate(() => DataValidator.ValidateLabyrinthDimensions(dimensions));
 
-        int h = dimensions[0], m = dimensions[1], n = dimensions[2];
+        int h = dimensions[0];
+        int m = dimensions[1];
+        int n = dimensions[2];
         char[,,] labyrinthGrid = new char[h, m, n];
 
         int lineIndex = 1;
