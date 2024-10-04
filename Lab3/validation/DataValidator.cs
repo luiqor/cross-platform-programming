@@ -1,9 +1,14 @@
 using Lab3.ConstantsSets;
 
+using CrossPlatformProgramming.Lab3.Validation.ConstantsSets;
+
 namespace Lab3.Validation;
 
 public static partial class DataValidator
 {
+    private const int LastIndex = 1;
+    private const int ComputerOffset = 1;
+
 
     public delegate string? ValidatorCallback();
 
@@ -31,12 +36,12 @@ public static partial class DataValidator
 
     public static string? ValidateLabyrinthDimensions(int[] dimensions)
     {
-        if (dimensions.Length != 3)
+        if (dimensions.Length != Dimension.TotalCount)
         {
             return "Invalid format of the first line. Expected three numbers separated by spaces.";
         }
 
-        if (dimensions[0] < 2 || dimensions[1] < 1 || dimensions[2] < 1 || dimensions[0] > 50 || dimensions[1] > 50 || dimensions[2] > 50)
+        if (dimensions.Any(dimension => dimension < Dimension.Min || dimension > Dimension.Max))
         {
             return "Invalid labyrinth dimensions. Expected 2 ≤ h, m, n ≤ 50";
         }
@@ -52,18 +57,18 @@ public static partial class DataValidator
 
     public static string? ValidateLevelRowsCount(int nextLineIndex, int totalLines, int i)
     {
-        return nextLineIndex > totalLines ? $"Not enough rows for level {i + 1}" : null;
+        return nextLineIndex > totalLines ? $"Not enough rows for level {i + ComputerOffset}" : null;
     }
 
     public static string? ValidateLevelRowColumsCount(int lineElementCount, int n, int i, int j)
     {
-        return lineElementCount != n ? $"Incorrect row length at level {i + 1}, row {j + 1}" : null;
+        return lineElementCount != n ? $"Incorrect row length at level {i + ComputerOffset}, row {j + ComputerOffset}" : null;
     }
 
     public static string? ValidateEmptyLineAfterLevel(int i, int h, int lineIndex, string[] lines)
     {
-        return i < h - 1 && lineIndex < lines.Length && !string.IsNullOrWhiteSpace(lines[lineIndex])
-            ? $"Missing empty line after level {i + 1}"
+        return i < h - LastIndex && lineIndex < lines.Length && !string.IsNullOrWhiteSpace(lines[lineIndex])
+            ? $"Missing empty line after level {i + ComputerOffset}"
             : null;
     }
 }
