@@ -1,4 +1,5 @@
 ﻿using Lab3.Services;
+using Lab3.Validation;
 
 class Program
 {
@@ -12,18 +13,43 @@ class Program
         File.WriteAllText(outputFilePath, bestTimeToPrincess.ToString());
     }
 
-    public static int ProcessData(string filename)
+    public static int ProcessData(string inputFilePath)
     {
+        DataValidator.Validate(() => DataValidator.ValidateInputFile(inputFilePath));
 
-        string[] lines = File.ReadAllLines(filename);
+        string[] lines = File.ReadAllLines(inputFilePath);
+        DataValidator.Validate(() => DataValidator.ValidateNumberOfLines(lines));
 
-        var dimensions = lines[0].Split().Select(int.Parse).ToArray();
+        int[] dimensions = lines[0].Split().Select(int.Parse).ToArray();
+        DataValidator.Validate(() => DataValidator.ValidateLabyrinthDimensions(dimensions));
 
         int h = dimensions[0], m = dimensions[1], n = dimensions[2];
+        char[,,] labyrinthGrid = new char[h, m, n];
 
-        char[,,] labyrinth = new char[h, m, n];
+        int lineIndex = 1;
 
-        return LabyrinthService.FindPrincess(h, m, n, labyrinth);
+        for (int i = 0; i < h; i++)
+        {
+            int nextLineIndex = lineIndex + m;
+            DataValidator.Validate(() => DataValidator.ValidateLevelRowsCount(nextLineIndex, lines.Length, i));
+
+
+            for (int j = 0; j < m; j++)
+            {
+                string line = lines[lineIndex++];
+                DataValidator.Validate(() => DataValidator.ValidateLevelRowColumsCount(line.Length, n, i, j));
+
+                for (int k = 0; k < n; k++)
+                {
+                    labyrinthGrid[i, j, k] = line[k];
+                }
+            }
+
+            DataValidator.Validate(() => DataValidator.ValidateEmptyLineAfterLevel(i, h, lineIndex, lines));
+            lineIndex++;
+        }
+
+        return LabyrinthService.FindPrincess(h, m, n, labyrinthGrid);
     }
 
 
