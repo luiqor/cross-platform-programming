@@ -1,7 +1,9 @@
 ﻿using Lab3.Services;
 using Lab3.Validation;
 
-class Program
+namespace Lab3;
+
+public class Program
 {
     static void Main()
     {
