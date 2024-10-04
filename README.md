@@ -17,3 +17,4 @@ dotnet msbuild -t:Test
 ## Done
 - [x] Lab1, Lab1.Test
 - [x] Lab2, Lab2.Test
+- [x] Lab3, Lab3.Test
