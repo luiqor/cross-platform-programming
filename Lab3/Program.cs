@@ -49,7 +49,7 @@ class Program
             lineIndex++;
         }
 
-        return LabyrinthService.FindPrincess(h, m, n, labyrinthGrid);
+        return LabyrinthService.FindPrincess(new Labyrinth(h, m, n, labyrinthGrid));
     }
 
 
