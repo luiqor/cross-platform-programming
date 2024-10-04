@@ -4,7 +4,7 @@ using Lab3.Services.ConstantsSets;
 
 namespace Lab3.Services;
 
-class LabyrinthService
+public class LabyrinthService
 {
     private const int LastIndexOffset = 1;
     private const int NotFound = -1;
@@ -52,7 +52,7 @@ class LabyrinthService
         return NotFound;
     }
 
-    private static (int, int, int) FindStart(Labyrinth labyrinth)
+    public static (int, int, int) FindStart(Labyrinth labyrinth)
     {
         for (int i = 0; i < labyrinth.H; i++)
         {
@@ -73,7 +73,7 @@ class LabyrinthService
         return (NotFound, NotFound, NotFound);
     }
 
-    private static bool IsValidMove(Labyrinth labyrinth, int x, int y, int z)
+    public static bool IsValidMove(Labyrinth labyrinth, int x, int y, int z)
     {
         return x >= 0 && x < labyrinth.H && y >= 0 && y < labyrinth.M && z >= 0 && z < labyrinth.N && labyrinth.Grid[x, y, z] != LabyrinthCode.Wall;
     }
