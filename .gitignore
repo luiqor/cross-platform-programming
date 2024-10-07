@@ -504,5 +504,5 @@ $RECYCLE.BIN/
 .history
 .ionide
 
-# Ignore everything inside the builds folder
-builds/net8.0/*
+# Ignore the builds folder
+builds/
