@@ -7,9 +7,8 @@ public class Program
 {
     public static void Main()
     {
-        string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-        string inputFilePath = Path.Combine(baseDirectory, "assets", "lab1", "input.txt");
-        string outputFilePath = Path.Combine(baseDirectory, "assets", "lab1", "output.txt");
+        string inputFilePath = Path.Combine("input.txt");
+        string outputFilePath = Path.Combine("output.txt");
 
         int processedData = ProcessData(inputFilePath);
         File.WriteAllText(outputFilePath, processedData.ToString());

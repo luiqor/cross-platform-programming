@@ -11,9 +11,8 @@ public static class Program
 
     static void Main()
     {
-        string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-        string inputFilePath = Path.Combine(baseDirectory, "assets", "lab2", "input.txt");
-        string outputFilePath = Path.Combine(baseDirectory, "assets", "lab2", "output.txt");
+        string inputFilePath = Path.Combine("input.txt");
+        string outputFilePath = Path.Combine("output.txt");
 
         string optimalTime = ProcessData(inputFilePath);
 

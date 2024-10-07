@@ -7,9 +7,8 @@ public class Program
 {
     static void Main()
     {
-        string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-        string inputFilePath = Path.Combine(baseDirectory, "assets", "lab3", "input.txt");
-        string outputFilePath = Path.Combine(baseDirectory, "assets", "lab3", "output.txt");
+        string inputFilePath = Path.Combine("input.txt");
+        string outputFilePath = Path.Combine("output.txt");
 
         int bestTimeToPrincess = ProcessData(inputFilePath);
         File.WriteAllText(outputFilePath, bestTimeToPrincess.ToString());

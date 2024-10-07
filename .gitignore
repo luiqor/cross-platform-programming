@@ -506,6 +506,3 @@ $RECYCLE.BIN/
 
 # Ignore everything inside the builds folder
 builds/net8.0/*
-
-# But not the assets folder
-!builds/net8.0/assets/
