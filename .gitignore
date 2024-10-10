@@ -81,6 +81,7 @@ StyleCopReport.xml
 *.ilk
 *.meta
 *.obj
+*.bin
 *.iobj
 *.pch
 *.pdb
@@ -200,6 +201,7 @@ PublishScripts/
 
 # NuGet Packages
 *.nupkg
+*.nuget
 # NuGet Symbol Packages
 *.snupkg
 # The packages folder can be ignored because of Package Restore
@@ -506,3 +508,25 @@ $RECYCLE.BIN/
 
 # Ignore the builds folder
 builds/
+
+
+# NoRarArchives - Ignore RAR archive files
+*.rar
+
+# NoExecutable - Ignore executable files
+*.exe
+*.bat
+*.cmd
+*.sh
+
+# NoDllBins - Ignore DLL binaries
+*.dll
+
+# NoSuoDirectory - Ignore Visual Studio user options
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# NoIdeaDirectory - Ignore JetBrains IDE files
+.idea/
