@@ -529,4 +529,11 @@ builds/
 *.sln.docstates
 
 # NoIdeaDirectory - Ignore JetBrains IDE files
-.idea/
+.idea/\
+
+
+# Vagrant
+.vagrant/
+
+# Packages
+nupkg/
