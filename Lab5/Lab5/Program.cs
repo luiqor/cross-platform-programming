@@ -4,6 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<Auth0UserService>();
 builder.Services.AddAuth0WebAppAuthentication(options =>
 {
     options.Domain = builder.Configuration["Auth0:Domain"] ?? string.Empty;

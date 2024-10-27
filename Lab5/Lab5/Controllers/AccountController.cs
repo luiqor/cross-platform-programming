@@ -3,15 +3,22 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using SampleMvcApp.ViewModels;
+using Lab5.ViewModels;
 using System.Linq;
 using System.Security.Claims;
 using Auth0.AspNetCore.Authentication;
 
-namespace SampleMvcApp.Controllers
+namespace Lab5.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly Auth0UserService _auth0UserService;
+
+        public AccountController(Auth0UserService auth0UserService)
+        {
+            _auth0UserService = auth0UserService;
+        }
+
         public async Task Login(string returnUrl = "/")
         {
             var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
@@ -29,6 +36,31 @@ namespace SampleMvcApp.Controllers
                 .Build();
 
             await HttpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
+        }
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RegisterAsync(UserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _auth0UserService.CreateUserAsync(model);
+                    return RedirectToAction("Index", "Home");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, $"Error creating user: {ex.Message}");
+                }
+            }
+
+            return View(model);
         }
 
 
@@ -50,9 +82,11 @@ namespace SampleMvcApp.Controllers
         {
             return View(new UserProfileViewModel()
             {
-                Name = User.Identity?.Name ?? string.Empty,
-                EmailAddress = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value ?? string.Empty,
+                FullName = User.Claims.FirstOrDefault(c => c.Type == "fullname")?.Value ?? "Not specified",
+                Email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value ?? "Not specified",
+                PhoneNumber = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.MobilePhone)?.Value ?? "Not specified",
                 ProfileImage = User.Claims.FirstOrDefault(c => c.Type == "picture")?.Value ?? string.Empty,
+                Username = User.Claims.FirstOrDefault(c => c.Type == "username")?.Value ?? "Not specified"
             });
         }
 

@@ -1,4 +1,4 @@
-﻿@model SampleMvcApp.ViewModels.UserProfileViewModel
+﻿@model Lab5.ViewModels.UserProfileViewModel
 @{
     ViewData["Title"] = "User Profile";
 }
@@ -13,9 +13,15 @@
                      alt="" class="img-rounded img-responsive" />
             </div>
             <div class="col-md-4">
-                <h3>@Model.Name</h3>
+                <h3>@Model.Username</h3>
                 <p>
-                    <i class="glyphicon glyphicon-envelope"></i> @Model.EmailAddress
+                    <i class="glyphicon glyphicon-envelope"></i> @Model.Email
+                </p>
+                <p>
+                    <i class="glyphicon glyphicon-phone"></i> @Model.PhoneNumber
+                </p>
+                <p>
+                   @Model.FullName
                 </p>
             </div>
         </div>
