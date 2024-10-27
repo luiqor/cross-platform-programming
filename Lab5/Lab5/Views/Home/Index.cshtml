@@ -3,12 +3,46 @@
 }
 <section>
     <div class="text-center">
-        <h1 class="display-4">Лабораторна №5</h1>
+        <h1>Лабораторна №5</h1>
     
     </div>
     <div>
-        <p>Веб застосунок (ASP.NET Core MVC) складається з двох проектів:</p>
+        <h2>Веб застосунок (ASP.NET Core MVC) складається з двох проектів:</h2>
         <p> a.	Безпосередньо веб додаток </p>
         <p> b.	Бібліотека класів, що дає змогу запускати практичні 1, 2 або 3</p>
+    </div>
+</section>
+<section>
+    <h3>Сторінка логіну, реестрації та профілю користувача:</h3>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Логін</h5>
+                        <p class="card-text">Увійдіть до свого облікового запису.</p>
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-primary">Увійти</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Реєстрація</h5>
+                        <p class="card-text">Створіть новий обліковий запис.</p>
+                        <a href="@Url.Action("Signup", "Account")" class="btn btn-primary">Зареєструватися</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Профіль користувача</h5>
+                        <p class="card-text">Перегляньте свій профіль.</p>
+                        <a href="@Url.Action("Profile", "Account")" class="btn btn-primary">Профіль</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
