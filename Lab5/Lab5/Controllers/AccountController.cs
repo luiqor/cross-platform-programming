@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Lab5.ViewModels;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.Cookies;
+
+using Lab5.Services;
 
 namespace Lab5.Controllers
 {
@@ -50,16 +51,16 @@ namespace Lab5.Controllers
             {
                 try
                 {
-                    var userProfile = await _auth0UserService.GetUser(model);
-                    var claims = new List<Claim>
-                    {
+                    UserProfileViewModel userProfile = await _auth0UserService.GetUser(model);
+                    List<Claim> claims =
+                    [
                         new(ClaimTypes.NameIdentifier, userProfile.Email),
                         new (ClaimTypes.Name, userProfile.FullName),
                         new (ClaimTypes.Email, userProfile.Email),
                         new ("ProfileImage", userProfile.ProfileImage),
                         new(ClaimTypes.MobilePhone , userProfile.PhoneNumber),
                         new("Username", userProfile.Username)
-                    };
+                    ];
 
                     var claimsIdentity = new ClaimsIdentity(claims, "AuthScheme");
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
@@ -80,9 +81,9 @@ namespace Lab5.Controllers
         [Authorize]
         public IActionResult Profile()
         {
-            var user = HttpContext.User;
+            ClaimsPrincipal user = HttpContext.User;
 
-            var profileViewModel = new UserProfileViewModel
+            UserProfileViewModel profileViewModel = new()
             {
                 Email = user.FindFirst(ClaimTypes.Email)?.Value ?? "Not specified",
                 FullName = user.FindFirst(ClaimTypes.Name)?.Value ?? "Not specified",
