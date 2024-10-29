@@ -1,4 +1,4 @@
-@model Lab5.ViewModels.UserViewModel
+@model Lab5.ViewModels.UserRegisterViewModel
 
 @{
     ViewData["Title"] = "Реєстрація";
@@ -21,6 +21,11 @@
             <label asp-for="Password" class="control-label"></label>
             <input asp-for="Password" class="form-control" />
             <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="ConfirmPassword" class="control-label"></label>
+            <input asp-for="ConfirmPassword" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>
         <div class="form-group mb-3">
             <label asp-for="PhoneNumber" class="control-label"></label>

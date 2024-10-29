@@ -24,13 +24,13 @@ namespace Lab5.Services
             _audience = _configuration["Auth0:ManagementApiAudience"] ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        public async Task CreateUserAsync(UserViewModel model)
+        public async Task CreateUserAsync(UserRegisterViewModel model)
         {
 
             AuthenticationApiClient tokenClient = new(new Uri($"https://{_domain}"));
             AccessTokenResponse tokenResponse = await tokenClient.GetTokenAsync(new ClientCredentialsTokenRequest
             {
-                ClientId = _clientSecret,
+                ClientId = _clientId,
                 ClientSecret = _clientSecret,
                 Audience = _audience
             });

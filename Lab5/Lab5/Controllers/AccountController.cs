@@ -19,7 +19,7 @@ namespace Lab5.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterAsync(UserViewModel model)
+        public async Task<IActionResult> RegisterAsync(UserRegisterViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -36,8 +36,6 @@ namespace Lab5.Controllers
                 ModelState.AddModelError(string.Empty, $"Error creating user: {ex.Message}");
                 return View(model);
             }
-
-
         }
 
         [HttpGet]
