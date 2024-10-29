@@ -65,5 +65,6 @@ class RunCommand
                 console.WriteLine("Please specify a valid lab assignment.");
                 break;
         }
+        console.WriteLine("Done! Check the output file for the results.");
     }
 }
