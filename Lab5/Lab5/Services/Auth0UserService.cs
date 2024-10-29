@@ -78,7 +78,7 @@ namespace Lab5.Services
             return new UserProfileViewModel
             {
                 Email = user.Email,
-                FullName = user.UserMetadata?["FullName"].ToString() ?? alternativeValue,
+                FullName = user.UserMetadata?["FullName"]?.ToString() ?? alternativeValue,
                 PhoneNumber = user.UserMetadata?["PhoneNumber"]?.ToString() ?? alternativeValue,
                 Username = user.UserMetadata?["Username"]?.ToString() ?? alternativeValue,
                 ProfileImage = user.Picture.ToString(),
