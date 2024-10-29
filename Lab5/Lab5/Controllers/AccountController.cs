@@ -19,7 +19,7 @@ namespace Lab5.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterAsync(UserRegisterViewModel model)
+        public async Task<IActionResult> Register(UserRegisterViewModel model)
         {
             if (!ModelState.IsValid)
             {
