@@ -33,3 +33,15 @@
 Рекомендації
 https://github.com/natemcmaster/CommandLineUtils
 https://github.com/loic-sharma/BaGet
+
+
+## Usage example
+```sh
+dotnet run -- version
+
+dotnet run -- run lab1
+
+dotnet run -- run lab1 --input E:\input.txt --output E:\output.txt
+
+dotnet run -- set-path -p E:\
+```
