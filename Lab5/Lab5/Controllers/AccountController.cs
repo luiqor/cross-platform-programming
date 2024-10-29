@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Lab5.ViewModels;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Lab5.Controllers
 {
@@ -13,7 +14,7 @@ namespace Lab5.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            return View();
+            return User.Identity != null && User.Identity.IsAuthenticated ? RedirectToAction("Profile", "Account") : View();
         }
 
         [HttpPost]
@@ -38,7 +39,7 @@ namespace Lab5.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            return View();
+            return User.Identity != null && User.Identity.IsAuthenticated ? RedirectToAction("Profile", "Account") : View();
         }
 
 
@@ -91,6 +92,14 @@ namespace Lab5.Controllers
             };
 
             return View(profileViewModel);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
