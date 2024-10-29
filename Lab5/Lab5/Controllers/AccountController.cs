@@ -1,42 +1,14 @@
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using Lab5.ViewModels;
-using System.Linq;
 using System.Security.Claims;
-using Auth0.AspNetCore.Authentication;
 
 namespace Lab5.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController(Auth0UserService auth0UserService) : Controller
     {
-        private readonly Auth0UserService _auth0UserService;
-
-        public AccountController(Auth0UserService auth0UserService)
-        {
-            _auth0UserService = auth0UserService;
-        }
-
-        public async Task Login(string returnUrl = "/")
-        {
-            var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
-                .WithRedirectUri(returnUrl)
-                .Build();
-
-            await HttpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
-        }
-
-        public async Task SignUp(string returnUrl = "/")
-        {
-            var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
-                .WithRedirectUri(returnUrl)
-                .WithParameter("screen_hint", "signup")
-                .Build();
-
-            await HttpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
-        }
+        private readonly Auth0UserService _auth0UserService = auth0UserService;
 
         [HttpGet]
         public IActionResult Register()
@@ -63,48 +35,62 @@ namespace Lab5.Controllers
             return View(model);
         }
 
-
-        [Authorize]
-        public async Task Logout()
+        [HttpGet]
+        public IActionResult Login()
         {
-            var authenticationProperties = new LogoutAuthenticationPropertiesBuilder()
-                // Indicate here where Auth0 should redirect the user after a logout.
-                // Note that the resulting absolute Uri must be whitelisted in 
-                .WithRedirectUri(Url.Action("Index", "Home") ?? "/")
-                .Build();
+            return View();
+        }
 
-            await HttpContext.SignOutAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+        [HttpPost]
+        public async Task<IActionResult> Login(UserLoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var userProfile = await _auth0UserService.GetUser(model);
+                    var claims = new List<Claim>
+                    {
+                        new(ClaimTypes.NameIdentifier, userProfile.Email),
+                        new (ClaimTypes.Name, userProfile.FullName),
+                        new (ClaimTypes.Email, userProfile.Email),
+                        new ("ProfileImage", userProfile.ProfileImage),
+                        new(ClaimTypes.MobilePhone , userProfile.PhoneNumber),
+                        new("Username", userProfile.Username)
+                    };
+
+                    var claimsIdentity = new ClaimsIdentity(claims, "AuthScheme");
+                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                    await HttpContext.SignInAsync("AuthScheme", claimsPrincipal);
+
+                    return RedirectToAction("Profile", "Account");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, $"Error authenticating user: {ex.Message}");
+                }
+            }
+
+            return View(model);
         }
 
         [Authorize]
         public IActionResult Profile()
         {
-            return View(new UserProfileViewModel()
+            var user = HttpContext.User;
+
+            var profileViewModel = new UserProfileViewModel
             {
-                FullName = User.Claims.FirstOrDefault(c => c.Type == "fullname")?.Value ?? "Not specified",
-                Email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value ?? "Not specified",
-                PhoneNumber = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.MobilePhone)?.Value ?? "Not specified",
-                ProfileImage = User.Claims.FirstOrDefault(c => c.Type == "picture")?.Value ?? string.Empty,
-                Username = User.Claims.FirstOrDefault(c => c.Type == "username")?.Value ?? "Not specified"
-            });
-        }
+                Email = user.FindFirst(ClaimTypes.Email)?.Value ?? "Not specified",
+                FullName = user.FindFirst(ClaimTypes.Name)?.Value ?? "Not specified",
+                PhoneNumber = user.FindFirst(ClaimTypes.MobilePhone)?.Value ?? "Not specified",
+                ProfileImage = user.FindFirst("ProfileImage")?.Value ?? "Not specified",
+                Username = user.FindFirst("Username")?.Value ?? "Not specified"
+            };
 
-
-        /// <summary>
-        /// This is just a helper action to enable you to easily see all claims related to a user. It helps when debugging your
-        /// application to see the in claims populated from the Auth0 ID Token
-        /// </summary>
-        /// <returns></returns>
-        [Authorize]
-        public IActionResult Claims()
-        {
-            return View();
-        }
-
-        public IActionResult AccessDenied()
-        {
-            return View();
+            return View(profileViewModel);
         }
     }
 }

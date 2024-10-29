@@ -1,15 +1,18 @@
-using Auth0.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<Auth0UserService>();
-builder.Services.AddAuth0WebAppAuthentication(options =>
-{
-    options.Domain = builder.Configuration["Auth0:Domain"] ?? string.Empty;
-    options.ClientId = builder.Configuration["Auth0:ClientId"] ?? string.Empty;
-});
+
+builder.Services.AddAuthentication("AuthScheme")
+    .AddCookie("AuthScheme", options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.ExpireTimeSpan = TimeSpan.FromHours(1);
+    });
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
