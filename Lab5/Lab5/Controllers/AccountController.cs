@@ -21,20 +21,23 @@ namespace Lab5.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterAsync(UserViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    await _auth0UserService.CreateUserAsync(model);
-                    return RedirectToAction("Index", "Home");
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError(string.Empty, $"Error creating user: {ex.Message}");
-                }
+                return View(model);
             }
 
-            return View(model);
+            try
+            {
+                await _auth0UserService.CreateUserAsync(model);
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"Error creating user: {ex.Message}");
+                return View(model);
+            }
+
+
         }
 
         [HttpGet]
@@ -47,49 +50,51 @@ namespace Lab5.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(UserLoginViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    UserProfileViewModel userProfile = await _auth0UserService.GetUser(model);
-                    List<Claim> claims =
-                    [
-                        new(ClaimTypes.NameIdentifier, userProfile.Email),
-                        new (ClaimTypes.Name, userProfile.FullName),
-                        new (ClaimTypes.Email, userProfile.Email),
-                        new ("ProfileImage", userProfile.ProfileImage),
-                        new(ClaimTypes.MobilePhone , userProfile.PhoneNumber),
-                        new("Username", userProfile.Username)
-                    ];
-
-                    var claimsIdentity = new ClaimsIdentity(claims, "AuthScheme");
-                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-                    await HttpContext.SignInAsync("AuthScheme", claimsPrincipal);
-
-                    return RedirectToAction("Profile", "Account");
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError(string.Empty, $"Error authenticating user: {ex.Message}");
-                }
+                return View(model);
             }
 
-            return View(model);
+            try
+            {
+                UserProfileViewModel userProfile = await _auth0UserService.GetUser(model);
+                List<Claim> claims =
+                [
+                    new Claim(ClaimTypes.NameIdentifier, userProfile.Email),
+                    new Claim(ClaimTypes.Name, userProfile.FullName),
+                    new Claim(ClaimTypes.Email, userProfile.Email),
+                    new Claim("ProfileImage", userProfile.ProfileImage),
+                    new Claim(ClaimTypes.MobilePhone, userProfile.PhoneNumber),
+                    new Claim("Username", userProfile.Username)
+                ];
+
+                ClaimsIdentity claimsIdentity = new(claims, "AuthScheme");
+                ClaimsPrincipal claimsPrincipal = new(claimsIdentity);
+
+                await HttpContext.SignInAsync("AuthScheme", claimsPrincipal);
+
+                return RedirectToAction("Profile", "Account");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"Error authenticating user: {ex.Message}");
+                return View(model);
+            }
         }
 
         [Authorize]
         public IActionResult Profile()
         {
+            string alternativeValue = "N/A";
             ClaimsPrincipal user = HttpContext.User;
 
             UserProfileViewModel profileViewModel = new()
             {
-                Email = user.FindFirst(ClaimTypes.Email)?.Value ?? "Not specified",
-                FullName = user.FindFirst(ClaimTypes.Name)?.Value ?? "Not specified",
-                PhoneNumber = user.FindFirst(ClaimTypes.MobilePhone)?.Value ?? "Not specified",
-                ProfileImage = user.FindFirst("ProfileImage")?.Value ?? "Not specified",
-                Username = user.FindFirst("Username")?.Value ?? "Not specified"
+                Email = user.FindFirst(ClaimTypes.Email)?.Value ?? alternativeValue,
+                FullName = user.FindFirst(ClaimTypes.Name)?.Value ?? alternativeValue,
+                PhoneNumber = user.FindFirst(ClaimTypes.MobilePhone)?.Value ?? alternativeValue,
+                ProfileImage = user.FindFirst("ProfileImage")?.Value ?? alternativeValue,
+                Username = user.FindFirst("Username")?.Value ?? alternativeValue
             };
 
             return View(profileViewModel);

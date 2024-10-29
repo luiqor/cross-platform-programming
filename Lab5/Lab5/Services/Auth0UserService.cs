@@ -7,28 +7,37 @@ using Lab5.ViewModels;
 
 namespace Lab5.Services
 {
-    public class Auth0UserService(IConfiguration configuration)
+    public class Auth0UserService
     {
-        private readonly IConfiguration _configuration = configuration;
+        private readonly string _domain;
+        private readonly string _clientId;
+        private readonly string _clientSecret;
+        private readonly string _audience;
+        private readonly IConfiguration _configuration;
+
+        public Auth0UserService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+            _domain = _configuration["Auth0:Domain"] ?? throw new ArgumentNullException(nameof(configuration));
+            _clientId = _configuration["Auth0:ClientId"] ?? throw new ArgumentNullException(nameof(configuration));
+            _clientSecret = _configuration["Auth0:ClientSecret"] ?? throw new ArgumentNullException(nameof(configuration));
+            _audience = _configuration["Auth0:ManagementApiAudience"] ?? throw new ArgumentNullException(nameof(configuration));
+        }
 
         public async Task CreateUserAsync(UserViewModel model)
         {
-            var domain = _configuration["Auth0:Domain"];
-            var clientId = _configuration["Auth0:ClientId"];
-            var clientSecret = _configuration["Auth0:ClientSecret"];
-            var audience = _configuration["Auth0:ManagementApiAudience"];
 
-            var tokenClient = new AuthenticationApiClient(new Uri($"https://{domain}"));
-            var tokenResponse = await tokenClient.GetTokenAsync(new ClientCredentialsTokenRequest
+            AuthenticationApiClient tokenClient = new(new Uri($"https://{_domain}"));
+            AccessTokenResponse tokenResponse = await tokenClient.GetTokenAsync(new ClientCredentialsTokenRequest
             {
-                ClientId = clientId,
-                ClientSecret = clientSecret,
-                Audience = audience
+                ClientId = _clientSecret,
+                ClientSecret = _clientSecret,
+                Audience = _audience
             });
 
-            var managementClient = new ManagementApiClient(tokenResponse.AccessToken, new Uri($"https://{domain}/api/v2"));
+            ManagementApiClient managementClient = new(tokenResponse.AccessToken, new Uri($"https://{_domain}/api/v2"));
 
-            var userCreateRequest = new UserCreateRequest
+            UserCreateRequest userCreateRequest = new()
             {
                 Email = model.Email,
                 EmailVerified = false,
@@ -47,35 +56,32 @@ namespace Lab5.Services
 
         public async Task<UserProfileViewModel> GetUser(UserLoginViewModel model)
         {
-            var domain = _configuration["Auth0:Domain"];
-            var clientId = _configuration["Auth0:ClientId"];
-            var clientSecret = _configuration["Auth0:ClientSecret"];
-            var audience = _configuration["Auth0:ManagementApiAudience"];
-
-            var authClient = new AuthenticationApiClient(new Uri($"https://{domain}"));
-            var authResponse = await authClient.GetTokenAsync(new ResourceOwnerTokenRequest
+            string alternativeValue = "N/A";
+            AuthenticationApiClient authClient = new(new Uri($"https://{_domain}"));
+            AccessTokenResponse authResponse = await authClient.GetTokenAsync(new ResourceOwnerTokenRequest
             {
-                Audience = audience,
-                ClientId = clientId,
-                ClientSecret = clientSecret,
+                Audience = _audience,
+                ClientId = _clientId,
+                ClientSecret = _clientSecret,
                 Realm = "Username-Password-Authentication",
                 Username = model.Email,
                 Password = model.Password,
                 Scope = "openid profile email"
             });
 
-            var managementClient = new ManagementApiClient(authResponse.AccessToken, new Uri($"https://{domain}/api/v2"));
+            ManagementApiClient managementClient = new(authResponse.AccessToken, new Uri($"https://{_domain}/api/v2"));
 
-            var userInfo = await authClient.GetUserInfoAsync(authResponse.AccessToken);
-            var user = await managementClient.Users.GetAsync(userInfo.UserId);
+            UserInfo userInfo = await authClient.GetUserInfoAsync(authResponse.AccessToken);
+            User user = await managementClient.Users.GetAsync(userInfo.UserId);
+
 
             return new UserProfileViewModel
             {
                 Email = user.Email,
-                FullName = user.UserMetadata["FullName"]?.ToString() ?? "Not specified",
-                PhoneNumber = user.UserMetadata["PhoneNumber"]?.ToString() ?? "Not specified",
-                Username = user.UserMetadata["Username"]?.ToString() ?? "Not specified",
-                ProfileImage = user.Picture?.ToString() ?? "Not specified",
+                FullName = user.UserMetadata?["FullName"].ToString() ?? alternativeValue,
+                PhoneNumber = user.UserMetadata?["PhoneNumber"]?.ToString() ?? alternativeValue,
+                Username = user.UserMetadata?["Username"]?.ToString() ?? alternativeValue,
+                ProfileImage = user.Picture.ToString(),
             };
         }
     }
