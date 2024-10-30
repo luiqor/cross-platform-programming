@@ -1,13 +1,14 @@
+# This vagrantfile can be used to create a virtual machine that will host a BaGet server and push a package to it
 Vagrant.configure("2") do |config|
-  config.vm.define "ubuntu" do |ubuntu|
-    ubuntu.vm.box = "ubuntu/jammy64"
-    ubuntu.vm.network "forwarded_port", guest: 5001, host: 8080
+  config.vm.define "packager" do |packager|
+    packager.vm.box = "ubuntu/jammy64"
+    packager.vm.network "forwarded_port", guest: 5001, host: 5000
 
-    ubuntu.vm.provider "virtualbox" do |vb|
+    packager.vm.provider "virtualbox" do |vb|
       vb.memory = "8192"
     end
 
-    ubuntu.vm.provision "shell", inline: <<-SHELL
+    packager.vm.provision "shell", inline: <<-SHELL
       wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
       dpkg -i packages-microsoft-prod.deb
       apt-get update
@@ -28,8 +29,10 @@ Vagrant.configure("2") do |config|
       cd /vagrant/baget
       dotnet BaGet.dll --urls "http://*:5001"
 
+      sleep 30
+
       cd /vagrant
-      sudo dotnet pack /vagrant/Lab4/Lab4/Lab4.csproj
+      sudo dotnet pack /vagrant/Lab4/Lab4/Lab4.csproj --configuration Release
       sudo dotnet nuget push -s http://localhost:5001/v3/index.json /vagrant/Lab4/Lab4/nupkg/DVashchilina.1.0.0.nupkg
     SHELL
   end

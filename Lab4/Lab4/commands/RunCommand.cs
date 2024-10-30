@@ -7,7 +7,7 @@ using Lab2 = LabLibrary.Lab2;
 using Lab3 = LabLibrary.Lab3;
 
 [Command(Name = "run", Description = "Run lab tasks")]
-class RunCommand
+public class RunCommand
 {
     [Option(Description = "Specify input file", ShortName = "I", LongName = "input")]
     public required string InputFile { get; set; }
