@@ -12,6 +12,7 @@ Vagrant.configure("2") do |config|
       wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
       dpkg -i packages-microsoft-prod.deb
       apt-get update
+      apt-get install -y unzip wget curl
 
       wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb
       dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb
@@ -29,10 +30,9 @@ Vagrant.configure("2") do |config|
       cd /vagrant/baget
       dotnet BaGet.dll --urls "http://*:5001"
 
-      sleep 30
-
       cd /vagrant
       sudo dotnet pack /vagrant/Lab4/Lab4/Lab4.csproj --configuration Release
+      ls -l /vagrant/Lab4/Lab4/nupkg/*.nupkg
       sudo dotnet nuget push -s http://localhost:5001/v3/index.json /vagrant/Lab4/Lab4/nupkg/DVashchilina.1.0.0.nupkg
     SHELL
   end
