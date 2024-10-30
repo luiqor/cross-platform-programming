@@ -1,0 +1,139 @@
+# This Vagrantfile can be used to install package from a local BaGet source to a .NET project
+BAGET_HOST_PORT = 5000 # If you are using a different port for BaGet, you will need to update
+
+Vagrant.configure("2") do |config|
+  config.vm.define "ubuntu" do |ubuntu|
+    ubuntu.vm.box = "ubuntu/jammy64"
+    ubuntu.vm.network "private_network", ip: "192.168.50.4"
+
+    ubuntu.vm.provider "virtualbox" do |vb|
+      vb.memory = "4096"
+    end
+
+    ubuntu.vm.provision "shell", privileged: true, inline: <<-SHELL
+      echo "Starting provisioning..."
+
+      wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+      dpkg -i packages-microsoft-prod.deb
+      apt-get update
+
+      wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb
+      dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb
+
+      apt-get install -y dotnet-sdk-8.0
+
+      HOST_IP=$(ip route | awk 'NR==1 {print $3}')
+      echo "Host IP detected as $HOST_IP"
+      
+      wget http://$HOST_IP:#{BAGET_HOST_PORT}/v3/package/dvashchilina/1.0.0/dvashchilina.1.0.0.nupkg -O dvashchilina.1.0.0.nupkg
+      echo "Downloaded dvashchilina.1.0.0.nupkg."
+
+      echo "Creating a local NuGet source..."
+      mkdir -p /home/vagrant/nuget-local
+      cp dvashchilina.1.0.0.nupkg /home/vagrant/nuget-local/
+
+      echo "Clearing NuGet cache..."
+      dotnet nuget locals all --clear
+
+      echo "Deleting existing App directory if it exists..."
+      rm -rf /home/vagrant/App
+
+      echo "Creating a new .NET project..."
+      dotnet new console -o /home/vagrant/App
+      cd /home/vagrant/App
+
+      echo "Setting correct permissions for the App directory..."
+      sudo chown -R vagrant:vagrant /home/vagrant/App
+      sudo chmod -R 755 /home/vagrant/App
+
+      echo "Removing existing local NuGet source if it exists..."
+      dotnet nuget remove source local-source
+
+      echo "Configuring the project to use the local NuGet source..."
+      dotnet nuget add source /home/vagrant/nuget-local -n local-source
+
+      echo "Adding the downloaded package to the project..."
+      dotnet add package dvashchilina --source local-source
+
+      echo "Provisioning complete."
+    SHELL
+  end
+
+  config.vm.define "windows" do |windows|
+    windows.vm.box = "gusztavvargadr/windows-10"
+    windows.vm.network "private_network", ip: "192.168.50.5"
+
+    windows.vm.provider "virtualbox" do |vb|
+      vb.memory = "4096"
+    end
+
+    windows.vm.provision "shell", privileged: true, inline: <<-SHELL
+      Write-Host "Starting provisioning for Windows..."
+
+      Invoke-WebRequest -Uri "https://dot.net/v1/dotnet-install.ps1" -OutFile "dotnet-install.ps1"
+      & .\\dotnet-install.ps1 -Version 8.0.0
+
+      $env:Path += ";$env:ProgramFiles\\dotnet"
+
+      $HostIP = Invoke-Expression -Command "(Get-NetIPAddress -AddressFamily IPv4 | Where-Object {$_.InterfaceAlias -eq 'vEthernet (Default Switch)'}).IPAddress"
+      Invoke-WebRequest -Uri "http://$HostIP:#{BAGET_HOST_PORT}/v3/package/dvashchilina/1.0.0/dvashchilina.1.0.0.nupkg" -OutFile "C:\\nuget-local\\dvashchilina.1.0.0.nupkg"
+
+      dotnet nuget locals all --clear
+      New-Item -ItemType Directory -Path "C:\\nuget-local" -Force
+      Copy-Item -Path "C:\\nuget-local\\dvashchilina.1.0.0.nupkg" -Destination "C:\\nuget-local"
+
+      Remove-Item -Recurse -Force "C:\\App" -ErrorAction SilentlyContinue
+      dotnet new console -o "C:\\App"
+
+      dotnet nuget remove source local-source -WarningAction SilentlyContinue
+      dotnet nuget add source "C:\\nuget-local" -n local-source
+      dotnet add "C:\\App\\App.csproj" package dvashchilina --source local-source
+
+      Write-Host "Provisioning complete for Windows."
+    SHELL
+  end
+
+  config.vm.define "macos" do |macos|
+    macos.vm.box = "jhcook/macos-sierra"
+
+    macos.vm.network "private_network", ip: "192.168.50.6"
+
+    macos.vm.provider "virtualbox" do |vb|
+      vb.memory = "4096"
+    end
+
+    macos.vm.provision "shell", privileged: true, inline: <<-SHELL
+      echo "Starting provisioning for macOS Sierra..."
+
+      if ! command -v brew &> /dev/null; then
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      fi
+
+      brew tap microsoft/dotnet
+      brew install --cask dotnet-sdk
+
+      export PATH="$PATH:/usr/local/share/dotnet"
+      
+      HOST_IP=$(ip route | awk 'NR==1 {print $3}')
+      echo "Host IP detected as $HOST_IP"
+
+      curl -o dvashchilina.1.0.0.nupkg http://$HOST_IP:#{BAGET_HOST_PORT}/v3/package/dvashchilina/1.0.0/dvashchilina.1.0.0.nupkg
+      echo "Downloaded dvashchilina.1.0.0.nupkg."
+
+      mkdir -p ~/nuget-local
+      mv dvashchilina.1.0.0.nupkg ~/nuget-local/
+
+      dotnet nuget locals all --clear
+
+      rm -rf ~/App
+      dotnet new console -o ~/App
+      cd ~/App
+
+      dotnet nuget remove source local-source -s ~/nuget-local
+      dotnet nuget add source ~/nuget-local -n local-source
+      dotnet add package dvashchilina --source local-source
+
+      echo "Provisioning complete for macOS Sierra."
+    SHELL
+  end
+end

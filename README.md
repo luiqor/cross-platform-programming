@@ -14,3 +14,5 @@ dotnet build Build.proj -p:Solution=Lab1 -t:Test
 - [x] Lab1, Lab1.Test
 - [x] Lab2, Lab2.Test
 - [x] Lab3, Lab3.Test
+- [x] LabLibrary - class library used in projects: `Lab4`
+- [x] Lab4 (Lab4 app, Vagrantfile for Lab4)

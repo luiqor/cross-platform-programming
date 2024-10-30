@@ -5,7 +5,7 @@ using McMaster.Extensions.CommandLineUtils;
 namespace Lab4.Commands;
 
 [Command(Name = "version", Description = "Show version info")]
-class VersionCommand
+public class VersionCommand
 {
     private void OnExecute(IConsole console)
     {

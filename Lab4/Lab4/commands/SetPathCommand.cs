@@ -5,7 +5,7 @@ using DotNetEnv;
 namespace Lab4.Commands;
 
 [Command(Name = "set-path", Description = "Set path to input/output files")]
-class SetPathCommand
+public class SetPathCommand
 {
     [Option(Description = "Set LAB_PATH env var", ShortName = "p", LongName = "path")]
     public required string Path { get; set; }
