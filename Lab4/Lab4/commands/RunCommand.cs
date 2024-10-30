@@ -7,7 +7,7 @@ using Lab2 = LabLibrary.Lab2;
 using Lab3 = LabLibrary.Lab3;
 
 [Command(Name = "run", Description = "Run lab tasks")]
-class RunCommand
+public class RunCommand
 {
     [Option(Description = "Specify input file", ShortName = "I", LongName = "input")]
     public required string InputFile { get; set; }
@@ -51,25 +51,20 @@ class RunCommand
         {
             case "lab1":
                 Lab1 lab1 = new();
-                lab1.Build();
-                lab1.Test();
                 lab1.Run(inputPath, outputPath);
                 break;
             case "lab2":
                 Lab2 lab2 = new();
-                lab2.Build();
-                lab2.Test();
                 lab2.Run(inputPath, outputPath);
                 break;
             case "lab3":
                 Lab3 lab3 = new();
-                lab3.Build();
-                lab3.Test();
                 lab3.Run(inputPath, outputPath);
                 break;
             default:
                 console.WriteLine("Please specify a valid lab assignment.");
                 break;
         }
+        console.WriteLine("Done! Check the output file for the results.");
     }
 }
