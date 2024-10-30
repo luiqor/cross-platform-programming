@@ -92,4 +92,48 @@ Vagrant.configure("2") do |config|
       Write-Host "Provisioning complete for Windows."
     SHELL
   end
+
+  config.vm.define "macos" do |macos|
+    macos.vm.box = "jhcook/macos-sierra"
+
+    macos.vm.network "private_network", ip: "192.168.50.6"
+
+    macos.vm.provider "virtualbox" do |vb|
+      vb.memory = "4096"
+    end
+
+    macos.vm.provision "shell", privileged: true, inline: <<-SHELL
+      echo "Starting provisioning for macOS Sierra..."
+
+      if ! command -v brew &> /dev/null; then
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      fi
+
+      brew tap microsoft/dotnet
+      brew install --cask dotnet-sdk
+
+      export PATH="$PATH:/usr/local/share/dotnet"
+      
+      HOST_IP=$(ip route | awk 'NR==1 {print $3}')
+      echo "Host IP detected as $HOST_IP"
+
+      curl -o dvashchilina.1.0.0.nupkg http://$HOST_IP:#{BAGET_HOST_PORT}/v3/package/dvashchilina/1.0.0/dvashchilina.1.0.0.nupkg
+      echo "Downloaded dvashchilina.1.0.0.nupkg."
+
+      mkdir -p ~/nuget-local
+      mv dvashchilina.1.0.0.nupkg ~/nuget-local/
+
+      dotnet nuget locals all --clear
+
+      rm -rf ~/App
+      dotnet new console -o ~/App
+      cd ~/App
+
+      dotnet nuget remove source local-source -s ~/nuget-local
+      dotnet nuget add source ~/nuget-local -n local-source
+      dotnet add package dvashchilina --source local-source
+
+      echo "Provisioning complete for macOS Sierra."
+    SHELL
+  end
 end
