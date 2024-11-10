@@ -1,5 +1,4 @@
 using McMaster.Extensions.CommandLineUtils;
-using DotNetEnv;
 
 namespace Lab4.Commands;
 using Lab1 = LabLibrary.Lab1;
@@ -20,9 +19,7 @@ public class RunCommand
 
     private void OnExecute(CommandLineApplication app, IConsole console)
     {
-        Env.Load(".env");
-
-        string? envLabPath = Environment.GetEnvironmentVariable("LAB_PATH");
+        string? envLabPath = Environment.GetEnvironmentVariable("LAB_PATH", EnvironmentVariableTarget.Machine);
         Console.WriteLine($"Running {Lab} with input: {InputFile}, output: {OutputFile}, LAB_PATH: {envLabPath}");
 
         if (string.IsNullOrEmpty(Lab))
