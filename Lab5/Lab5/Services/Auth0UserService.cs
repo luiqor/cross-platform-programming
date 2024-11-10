@@ -24,7 +24,7 @@ public class Auth0UserService
         _audience = _configuration["Auth0:ManagementApiAudience"] ?? throw new ArgumentNullException(nameof(configuration));
     }
 
-    public async Task CreateUserAsync(UserRegisterViewModel model)
+    public async Task CreateUser(UserRegisterViewModel model)
     {
 
         AuthenticationApiClient tokenClient = new(new Uri($"https://{_domain}"));
@@ -40,6 +40,7 @@ public class Auth0UserService
         UserCreateRequest userCreateRequest = new()
         {
             Email = model.Email,
+            UserName = model.Username,
             EmailVerified = false,
             Password = model.Password,
             Connection = "Username-Password-Authentication",
@@ -47,7 +48,6 @@ public class Auth0UserService
             {
                 model.FullName,
                 model.PhoneNumber,
-                model.Username,
             }
         };
 
@@ -78,9 +78,9 @@ public class Auth0UserService
         return new UserProfileViewModel
         {
             Email = user.Email,
+            Username = user.UserName,
             FullName = user.UserMetadata?["FullName"]?.ToString() ?? alternativeValue,
             PhoneNumber = user.UserMetadata?["PhoneNumber"]?.ToString() ?? alternativeValue,
-            Username = user.UserMetadata?["Username"]?.ToString() ?? alternativeValue,
             ProfileImage = user.Picture.ToString(),
         };
     }

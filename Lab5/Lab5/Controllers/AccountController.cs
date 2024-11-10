@@ -28,7 +28,7 @@ public class AccountController(Auth0UserService auth0UserService) : Controller
 
         try
         {
-            await _auth0UserService.CreateUserAsync(model);
+            await _auth0UserService.CreateUser(model);
             return RedirectToAction("Index", "Home");
         }
         catch (Exception ex)
