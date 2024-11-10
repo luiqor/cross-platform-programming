@@ -4,9 +4,9 @@ namespace LabLibrary;
 
 public class Lab3 : LabBase
 {
-    public override void Run(string inputFile, string outputFile)
+    public override string Run(string input)
     {
-        int bestTimeToPrincess = Program.ProcessData(inputFile);
-        File.WriteAllText(outputFile, bestTimeToPrincess.ToString());
+        int bestTimeToPrincess = Program.ProcessData(input);
+        return bestTimeToPrincess.ToString();
     }
 }

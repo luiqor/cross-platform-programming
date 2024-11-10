@@ -12,12 +12,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetEnv" Version="3.1.1" />
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="4.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\LabLibrary\LabLibrary.csproj" />
+    <ProjectReference Include="..\..\LabLibrary\LabLibrary.csproj" IncludeAssets="all"  PrivateAssets="all"/>
   </ItemGroup>
 
 </Project>
