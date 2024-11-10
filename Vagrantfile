@@ -1,5 +1,61 @@
-# This vagrantfile can be used to create a virtual machine that will host a BaGet server and push a package to it
 Vagrant.configure("2") do |config|
+  # Lab4 VM ubuntu that runs commands from the package created from Lab4
+  config.vm.define "lab4_ubuntu" do |lab4_ubuntu|
+    lab4_ubuntu.vm.box = "ubuntu/jammy64"
+    lab4_ubuntu.vm.network "public_network"
+
+    lab4_ubuntu.vm.provider "virtualbox" do |vb|
+      vb.memory = "4096"
+    end
+
+    lab4_ubuntu.vm.provision "shell", inline: <<-SHELL
+      sudo apt-get update
+      
+      apt-get install -y dotnet-sdk-8.0
+
+      dotnet nuget locals all --clear
+      rm -rf /vagrant/nupkg
+
+      cd /vagrant
+      sudo dotnet pack /vagrant/Lab4/Lab4/Lab4.csproj --configuration Release --output /vagrant/nupkg
+      ls -l /vagrant/nupkg/*.nupkg
+
+      rm -rf /vagrant/App
+
+      dotnet new console -n App
+      cd /vagrant/App
+      dotnet add package McMaster.Extensions.CommandLineUtils --version 4.1.1
+      dotnet add reference /vagrant/LabLibrary/LabLibrary.csproj
+      dotnet add package DVashchilina --version 1.0.0 --source /vagrant/nupkg
+
+      cat <<EOL > /vagrant/App/Program.cs
+using System;
+using Lab4;
+
+namespace App
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("App is running successfully...");
+            Lab4.Program.Main(args);
+        }
+    }
+}
+EOL
+
+      dotnet build
+      dotnet run
+      dotnet run -- version
+
+      dotnet run -- run lab1 --input /vagrant/Lab1/input.txt
+      echo "Lab1 output:"
+      cat /root/output.txt
+    SHELL
+  end
+
+  # VM to push the Lab4 to the BaGet server
   config.vm.define "packager" do |packager|
     packager.vm.box = "ubuntu/jammy64"
     packager.vm.network "forwarded_port", guest: 5001, host: 5000
@@ -17,7 +73,7 @@ Vagrant.configure("2") do |config|
       wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb
       dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb
 
-      # Install required libraries for .NET 3.1
+      # Install required libraries for .NET 3.1 in order for BaGet to work
       apt-get install -y libicu66
 
       apt-get install -y dotnet-sdk-8.0
@@ -37,3 +93,4 @@ Vagrant.configure("2") do |config|
     SHELL
   end
 end
+
