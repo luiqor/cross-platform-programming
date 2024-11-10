@@ -1,3 +1,5 @@
+using System.Formats.Asn1;
+
 using McMaster.Extensions.CommandLineUtils;
 
 namespace Lab4.Commands;
@@ -44,24 +46,35 @@ public class RunCommand
             return;
         }
 
+        var answer = string.Empty;
+
         switch (Lab.ToLower())
         {
             case "lab1":
                 Lab1 lab1 = new();
-                lab1.Run(inputPath, outputPath);
+                answer = lab1.Run(inputPath);
                 break;
             case "lab2":
                 Lab2 lab2 = new();
-                lab2.Run(inputPath, outputPath);
+                answer = lab2.Run(inputPath);
                 break;
             case "lab3":
                 Lab3 lab3 = new();
-                lab3.Run(inputPath, outputPath);
+                answer = lab3.Run(inputPath);
                 break;
             default:
                 console.WriteLine("Please specify a valid lab assignment.");
                 break;
         }
+
+        if (string.IsNullOrEmpty(answer))
+        {
+            console.WriteLine("No answer was returned from the lab assignment.");
+            return;
+        }
+
+        File.WriteAllText(outputPath, answer);
+
         console.WriteLine("Done! Check the output file for the results.");
     }
 }
