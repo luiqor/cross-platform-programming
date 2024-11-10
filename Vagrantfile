@@ -55,6 +55,89 @@ EOL
     SHELL
   end
 
+  # Lab4 VM windows that runs commands from the package created from Lab4
+  config.vm.define "lab4_windows" do |lab4_windows|
+    lab4_windows.vm.box = "gusztavvargadr/windows-10"
+    lab4_windows.vm.network "public_network"
+
+    lab4_windows.vm.provider "virtualbox" do |vb|
+      vb.memory = "4096"
+      vb.cpus = 2
+    end
+
+    lab4_windows.vm.provision "shell", privileged: "true", inline: <<-SHELL
+      Set-ExecutionPolicy Bypass -Scope Process -Force
+      [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+      iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+
+      choco install dotnet-sdk -y
+      
+      $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+      
+      dotnet --version
+
+      New-Item -ItemType Directory -Force -Path C:\\vagrant\\nupkg | Out-Null
+      New-Item -ItemType Directory -Force -Path C:\\vagrant\\App | Out-Null
+
+      dotnet nuget locals all --clear
+
+      Push-Location C:\\vagrant
+      dotnet pack C:\\vagrant\\Lab4\\Lab4\\Lab4.csproj --configuration Release --output C:\\vagrant\\nupkg
+      Write-Host "Package contents:"
+      Get-ChildItem C:\\vagrant\\nupkg\\*.nupkg
+
+      Create and configure new console application
+      Write-Host "Creating new console application..."
+      Push-Location C:\\vagrant
+      if (Test-Path .\\App) {
+        Remove-Item .\\App -Recurse -Force
+      }
+      dotnet new console -n App
+      
+      Push-Location .\\App
+      dotnet add package McMaster.Extensions.CommandLineUtils --version 4.1.1
+      dotnet add reference ..\\LabLibrary\\LabLibrary.csproj
+      dotnet add package DVashchilina --version 1.0.0 --source ..\\nupkg
+
+      Write-Host "Creating Program.cs..."
+      @'
+using System;
+using Lab4;
+
+namespace App
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("App is running successfully...");
+            Lab4.Program.Main(args);
+        }
+    }
+}
+'@ | Out-File -FilePath Program.cs -Encoding UTF8
+
+      Write-Host "Building and running the application..."
+      dotnet build
+      dotnet run
+      dotnet run -- version
+
+      Write-Host "Running lab1..."
+      dotnet run -- run lab1 --input ..\\Lab1\\input.txt
+      Write-Host "Lab1 output:"
+      if (Test-Path $env:USERPROFILE\\output.txt) {
+        Get-Content $env:USERPROFILE\\output.txt
+      } else {
+        Write-Host "Output file not found at: $env:USERPROFILE\\output.txt"
+      }
+
+      Pop-Location
+      Pop-Location
+      Pop-Location
+    SHELL
+  end
+
+
   # VM to push the Lab4 to the BaGet server
   config.vm.define "packager" do |packager|
     packager.vm.box = "ubuntu/jammy64"
