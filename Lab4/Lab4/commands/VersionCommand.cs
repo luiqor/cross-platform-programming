@@ -1,4 +1,4 @@
-using System.Xml.Linq;
+using System.Reflection;
 
 using McMaster.Extensions.CommandLineUtils;
 
@@ -9,18 +9,10 @@ public class VersionCommand
 {
     private void OnExecute(IConsole console)
     {
-        string csprojPath = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Lab4.csproj");
-        if (!File.Exists(csprojPath))
-        {
-            console.WriteLine("Project file not found.");
-            return;
-        }
+        Assembly assembly = Assembly.GetExecutingAssembly();
+        var version = assembly.GetName()?.Version?.ToString() ?? "?.?.?";
 
-        XDocument csproj = XDocument.Load(csprojPath);
-        XElement? propertyGroup = csproj.Descendants("PropertyGroup").FirstOrDefault();
-
-
-        Console.WriteLine($"Author: {propertyGroup?.Element("Authors")?.Value ?? "https://github.com/luiqor"}");
-        Console.WriteLine($"Version: {propertyGroup?.Element("Version")?.Value ?? "?.?.?"}");
+        Console.WriteLine("Author: https://github.com/luiqor");
+        Console.WriteLine($"Version: {version}");
     }
 }

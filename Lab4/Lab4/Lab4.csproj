@@ -9,6 +9,7 @@
     <Version>1.0.0</Version>
     <Authors>Diana Vashchilina</Authors>
     <PackageOutputPath>./nupkg</PackageOutputPath>
+    <AssemblyInformationalVersion>Package: DVashchilina, Author: Diana Vashchilina</AssemblyInformationalVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\LabLibrary\LabLibrary.csproj" />
+    <ProjectReference Include="..\..\LabLibrary\LabLibrary.csproj" PrivateAssets="all"/>
   </ItemGroup>
 
 </Project>
