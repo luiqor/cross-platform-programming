@@ -1,0 +1,25 @@
+@model Lab5.ViewModels.LabViewModel;
+@{
+    ViewData["Title"] = "Lab Page";
+}
+
+<div class="container mt-5">
+    <h2>Run Lab</h2>
+    <form asp-action="Submit" method="post">
+        <div class="form-group mb-3">
+            <label asp-for="Number" class="control-label">Оберіть лаб.</label>
+            <select asp-for="Number" class="form-control">
+                <option value="1">Lab 1</option>
+                <option value="2">Lab 2</option>
+                <option value="3">Lab 3</option>
+            </select>
+            <span asp-validation-for="Number" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="InputData" class="control-label">Введіть вхідні дані для лаб</label>
+            <textarea asp-for="InputData" class="form-control" rows="10" cols="50"></textarea>
+            <span asp-validation-for="InputData" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Ок</button>
+    </form>
+</div>

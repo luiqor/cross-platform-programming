@@ -11,4 +11,8 @@
     <PackageReference Include="Auth0.ManagementApi" Version="7.28.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\LabLibrary\LabLibrary.csproj" />
+  </ItemGroup>
+
 </Project>
