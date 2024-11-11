@@ -10,53 +10,79 @@ namespace Lab5.Controllers;
 [Authorize]
 public class LabController : Controller
 {
-    public ActionResult Index()
+    public ActionResult Lab1()
     {
-        return View();
+        var model = new LabViewModel
+        {
+            InputData = "3 2\n3 2"
+        };
+        return View(model);
+    }
+
+    public ActionResult Lab2()
+    {
+        var model = new LabViewModel
+        {
+            InputData = "3\n8:19:16\n2:05:11\n12:50:07"
+        };
+        return View(model);
+    }
+
+    public ActionResult Lab3()
+    {
+        var model = new LabViewModel
+        {
+            InputData = "3 3 3\n1..\noo.\n...\n\nooo\n..o\n.oo\n\nooo\no..\no.2"
+        };
+        return View(model);
+    }
+
+    private IActionResult RunLab<TLab>(LabViewModel model, int labNumber) where TLab : new()
+    {
+        try
+        {
+            string answer;
+            string tempFilePath = Path.GetTempFileName();
+            System.IO.File.WriteAllText(tempFilePath, model.InputData);
+
+            dynamic lab = new TLab();
+            answer = lab.Run(tempFilePath);
+
+            if (string.IsNullOrEmpty(answer))
+            {
+                ModelState.AddModelError(string.Empty, "No answer was returned from the lab assignment.");
+                return View(model);
+            }
+
+            System.IO.File.Delete(tempFilePath);
+
+            ViewBag.Answer = answer;
+            ViewBag.Number = labNumber;
+            ViewBag.InputData = model.InputData;
+            return View("Output");
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError(string.Empty, $"Error creating user: {ex.Message}");
+            return View(model);
+        }
     }
 
     [HttpPost]
-    public IActionResult Submit(LabViewModel model)
+    public IActionResult Lab1(LabViewModel model)
     {
-        if (!ModelState.IsValid)
-        {
-            return View(model);
-        }
+        return RunLab<Lab1>(model, 1);
+    }
 
-        string answer;
-        string tempFilePath = Path.GetTempFileName();
-        System.IO.File.WriteAllText(tempFilePath, model.InputData);
+    [HttpPost]
+    public IActionResult Lab2(LabViewModel model)
+    {
+        return RunLab<Lab2>(model, 2);
+    }
 
-        switch (model.Number)
-        {
-            case 1:
-                Lab1 lab1 = new();
-                answer = lab1.Run(tempFilePath);
-                break;
-            case 2:
-                Lab2 lab2 = new();
-                answer = lab2.Run(tempFilePath);
-                break;
-            case 3:
-                Lab3 lab3 = new();
-                answer = lab3.Run(tempFilePath);
-                break;
-            default:
-                ModelState.AddModelError(string.Empty, $"Lab number {model.Number} is invalid.");
-                return View(model);
-        }
-
-        if (string.IsNullOrEmpty(answer))
-        {
-            ModelState.AddModelError(string.Empty, "No answer was returned from the lab assignment.");
-            return View(model);
-        }
-
-        System.IO.File.Delete(tempFilePath);
-
-        ViewBag.Answer = answer;
-        ViewBag.Number = model.Number;
-        ViewBag.InputData = model.InputData;
-        return View("Output");
+    [HttpPost]
+    public IActionResult Lab3(LabViewModel model)
+    {
+        return RunLab<Lab3>(model, 3);
     }
 }
