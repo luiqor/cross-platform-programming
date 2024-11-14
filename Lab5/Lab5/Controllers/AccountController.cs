@@ -5,6 +5,7 @@ using Lab5.Models;
 using System.Security.Claims;
 
 using Lab5.Services;
+using Lab5.Models.Constants;
 
 namespace Lab5.Controllers;
 
@@ -83,16 +84,15 @@ public class AccountController(Auth0UserService auth0UserService) : Controller
     [Authorize]
     public IActionResult Profile()
     {
-        string alternativeValue = "N/A";
         ClaimsPrincipal user = HttpContext.User;
 
         UserProfileViewModel profileViewModel = new()
         {
-            Email = user.FindFirst(ClaimTypes.Email)?.Value ?? alternativeValue,
-            FullName = user.FindFirst(ClaimTypes.Name)?.Value ?? alternativeValue,
-            PhoneNumber = user.FindFirst(ClaimTypes.MobilePhone)?.Value ?? alternativeValue,
-            ProfileImage = user.FindFirst("ProfileImage")?.Value ?? alternativeValue,
-            Username = user.FindFirst("Username")?.Value ?? alternativeValue
+            Email = user.FindFirst(ClaimTypes.Email)?.Value ?? DataValue.Alternative,
+            FullName = user.FindFirst(ClaimTypes.Name)?.Value ?? DataValue.Alternative,
+            PhoneNumber = user.FindFirst(ClaimTypes.MobilePhone)?.Value ?? DataValue.Alternative,
+            ProfileImage = user.FindFirst("ProfileImage")?.Value ?? DataValue.Alternative,
+            Username = user.FindFirst("Username")?.Value ?? DataValue.Alternative
         };
 
         return View(profileViewModel);

@@ -4,6 +4,7 @@ using Auth0.AuthenticationApi;
 using Auth0.AuthenticationApi.Models;
 
 using Lab5.Models;
+using Lab5.Models.Constants;
 
 namespace Lab5.Services;
 
@@ -56,7 +57,6 @@ public class Auth0UserService
 
     public async Task<UserProfileViewModel> GetUser(UserLoginViewModel model)
     {
-        string alternativeValue = "N/A";
         AuthenticationApiClient authClient = new(new Uri($"https://{_domain}"));
         AccessTokenResponse authResponse = await authClient.GetTokenAsync(new ResourceOwnerTokenRequest
         {
@@ -79,8 +79,8 @@ public class Auth0UserService
         {
             Email = user.Email,
             Username = user.UserName,
-            FullName = user.UserMetadata?["FullName"]?.ToString() ?? alternativeValue,
-            PhoneNumber = user.UserMetadata?["PhoneNumber"]?.ToString() ?? alternativeValue,
+            FullName = user.UserMetadata?["FullName"]?.ToString() ?? DataValue.Alternative,
+            PhoneNumber = user.UserMetadata?["PhoneNumber"]?.ToString() ?? DataValue.Alternative,
             ProfileImage = user.Picture.ToString(),
         };
     }
