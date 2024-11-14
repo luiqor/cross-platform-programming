@@ -137,6 +137,27 @@ namespace App
     SHELL
   end
 
+  config.vm.define "lab5_ubuntu" do |lab5_ubuntu|
+    lab5_ubuntu.vm.box = "ubuntu/jammy64"
+    lab5_ubuntu.vm.network "public_network"
+    lab5_ubuntu.vm.network "forwarded_port", guest: 3000, host: 3000
+
+    lab5_ubuntu.vm.provider "virtualbox" do |vb|
+      vb.memory = "4096"
+    end
+
+    lab5_ubuntu.vm.provision "shell", inline: <<-SHELL
+      sudo apt-get update
+      sudo apt-get install -y dotnet-sdk-8.0
+
+      dotnet nuget locals all --clear
+
+      cd /vagrant/Lab5/Lab5
+
+      dotnet run
+    SHELL
+  end
+
 
   # VM to push the Lab4 to the BaGet server
   config.vm.define "packager" do |packager|
