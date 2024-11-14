@@ -3,7 +3,7 @@ using Auth0.ManagementApi.Models;
 using Auth0.AuthenticationApi;
 using Auth0.AuthenticationApi.Models;
 
-using Lab5.ViewModels;
+using Lab5.Models;
 
 namespace Lab5.Services;
 

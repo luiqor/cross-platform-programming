@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Lab5.ViewModels;
+using Lab5.Models;
 using System.Security.Claims;
 
 using Lab5.Services;

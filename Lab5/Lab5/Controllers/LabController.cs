@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Lab5.ViewModels;
+using Lab5.Models;
 using Lab1 = LabLibrary.Lab1;
 using Lab2 = LabLibrary.Lab2;
 using Lab3 = LabLibrary.Lab3;

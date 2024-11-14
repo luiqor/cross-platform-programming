@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Lab5.ViewModels;
+namespace Lab5.Models;
 
 public class UserLoginViewModel
 {
