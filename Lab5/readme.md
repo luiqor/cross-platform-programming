@@ -46,3 +46,11 @@
 8. Всі скрипти, або інші команди що слід виконати для розгортання застосунку слід додати до репозитарію.
 
 [issue](https://github.com/luiqor/cross-platform-programming/issues/10)
+
+### Демо наявності номеру телефону в профілі на ВМ `lab5_ubuntu` (мап портів та курл запитом в консолі)
+
+https://github.com/user-attachments/assets/3df83505-30f1-4139-8fc5-52f3b938474d
+
+https://github.com/user-attachments/assets/9812c6b1-815f-4460-80fb-480c50e66f05
+
+[або на гітхабі у коментах до issue](https://github.com/luiqor/cross-platform-programming/issues/10#issuecomment-2481311289)
