@@ -516,7 +516,6 @@ builds/
 *.exe
 *.bat
 *.cmd
-*.sh
 
 # NoDllBins - Ignore DLL binaries
 *.dll
