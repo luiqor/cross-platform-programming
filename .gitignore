@@ -200,7 +200,6 @@ publish/
 PublishScripts/
 
 # NuGet Packages
-*.nupkg
 *.nuget
 # NuGet Symbol Packages
 *.snupkg
@@ -517,7 +516,6 @@ builds/
 *.exe
 *.bat
 *.cmd
-*.sh
 
 # NoDllBins - Ignore DLL binaries
 *.dll
@@ -536,5 +534,4 @@ builds/
 .vagrant/
 
 # Packages
-nupkg/
 baget/

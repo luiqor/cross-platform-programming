@@ -1,0 +1,52 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/jammy64"
+  config.vm.network "forwarded_port", guest: 5001, host: 5000
+  config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "8192"
+  end
+
+  config.vm.provision "shell", inline: <<-SHELL
+    wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+    dpkg -i packages-microsoft-prod.deb
+    apt-get update
+    apt-get install -y unzip wget curl
+
+    wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb
+    dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb
+
+    # Install required libraries for .NET 3.1 in order for BaGet to work
+    apt-get install -y libicu66
+
+    apt-get install -y dotnet-sdk-8.0
+    apt-get install -y dotnet-runtime-3.1 aspnetcore-runtime-3.1
+
+    wget https://github.com/loic-sharma/BaGet/releases/download/v0.4.0-preview2/BaGet.zip -O /tmp/BaGet.zip
+    mkdir -p /vagrant/baget
+    unzip -o /tmp/BaGet.zip -d /vagrant/baget
+    rm /tmp/BaGet.zip
+
+    cd /vagrant/baget
+    nohup dotnet BaGet.dll --urls "http://*:5001" &
+    sleep 10 # Give the server some time to start
+
+    cd /vagrant
+    sudo dotnet pack /vagrant/Lab3/Lab3.csproj --configuration Release
+
+    sudo dotnet nuget push -s http://localhost:5001/v3/index.json /vagrant/Lab3/nupkg/DVashchilina.1.0.0.nupkg
+
+    dotnet nuget locals all --clear
+
+    wget http://localhost:5001/v3/package/dvashchilina/1.0.0/dvashchilina.1.0.0.nupkg -O dvashchilina.1.0.0.nupkg
+    echo "Downloaded dvashchilina.1.0.0.nupkg."
+
+    echo "Creating a local NuGet source..."
+    mkdir -p /home/vagrant/nuget-local
+    cp dvashchilina.1.0.0.nupkg /home/vagrant/nuget-local/
+
+    cd /vagrant/Lab3.Runner
+    dotnet add package DVashchilina --source /home/vagrant/nuget-local
+    dotnet run
+  SHELL
+end
