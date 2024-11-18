@@ -5,7 +5,7 @@ namespace Lab3;
 
 public class Program
 {
-    static void Main()
+    public static void Main()
     {
         string inputFilePath = Path.Combine("input.txt");
         string outputFilePath = Path.Combine("output.txt");

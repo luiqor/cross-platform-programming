@@ -200,7 +200,6 @@ publish/
 PublishScripts/
 
 # NuGet Packages
-*.nupkg
 *.nuget
 # NuGet Symbol Packages
 *.snupkg
@@ -536,5 +535,4 @@ builds/
 .vagrant/
 
 # Packages
-nupkg/
 baget/
