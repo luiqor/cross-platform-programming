@@ -12,7 +12,7 @@ cd ..
 cd Lab3.Runner
 
 echo "Adding package to Lab3.Runner."
-dotnet add package DVashchilina --source ../Lab3/nupkg
+dotnet add package DVaschilina --source ../Lab3/nupkg
 
 dotnet restore
 

@@ -34,19 +34,19 @@ Vagrant.configure("2") do |config|
     cd /vagrant
     sudo dotnet pack /vagrant/Lab3/Lab3.csproj --configuration Release
 
-    sudo dotnet nuget push -s http://localhost:5001/v3/index.json /vagrant/Lab3/nupkg/DVashchilina.1.0.0.nupkg
+    sudo dotnet nuget push -s http://localhost:5001/v3/index.json /vagrant/Lab3/nupkg/DVaschilina.1.0.0.nupkg
 
     dotnet nuget locals all --clear
 
-    wget http://localhost:5001/v3/package/dvashchilina/1.0.0/dvashchilina.1.0.0.nupkg -O dvashchilina.1.0.0.nupkg
-    echo "Downloaded dvashchilina.1.0.0.nupkg."
+    wget http://localhost:5001/v3/package/dvaschilina/1.0.0/dvaschilina.1.0.0.nupkg -O dvaschilina.1.0.0.nupkg
+    echo "Downloaded dvaschilina.1.0.0.nupkg."
 
     echo "Creating a local NuGet source..."
     mkdir -p /home/vagrant/nuget-local
-    cp dvashchilina.1.0.0.nupkg /home/vagrant/nuget-local/
+    cp dvaschilina.1.0.0.nupkg /home/vagrant/nuget-local/
 
     cd /vagrant/Lab3.Runner
-    dotnet add package DVashchilina --source /home/vagrant/nuget-local
+    dotnet add package DVaschilina --source /home/vagrant/nuget-local
     dotnet run
   SHELL
 end

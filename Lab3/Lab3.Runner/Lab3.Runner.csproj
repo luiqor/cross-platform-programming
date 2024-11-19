@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DVashchilina" Version="1.0.0" />
+    <PackageReference Include="DVaschilina" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
