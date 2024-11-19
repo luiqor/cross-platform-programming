@@ -1,12 +1,14 @@
 using System.Formats.Asn1;
+using System.Runtime.InteropServices;
 
 using McMaster.Extensions.CommandLineUtils;
 
-namespace Lab4.Commands;
+using Lab4.Utils;
 using Lab1 = LabLibrary.Lab1;
 using Lab2 = LabLibrary.Lab2;
 using Lab3 = LabLibrary.Lab3;
 
+namespace Lab4.Commands;
 [Command(Name = "run", Description = "Run lab tasks")]
 public class RunCommand
 {
@@ -21,7 +23,10 @@ public class RunCommand
 
     private void OnExecute(CommandLineApplication app, IConsole console)
     {
-        string? envLabPath = Environment.GetEnvironmentVariable("LAB_PATH", EnvironmentVariableTarget.Machine);
+        string? envLabPath = (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                                ? UnixEnvironmentUtil.GetEnvironmentVariableUnix("LAB_PATH")
+                                : Environment.GetEnvironmentVariable("LAB_PATH", EnvironmentVariableTarget.Machine);
+
         Console.WriteLine($"Running {Lab} with input: {InputFile}, output: {OutputFile}, LAB_PATH: {envLabPath}");
 
         if (string.IsNullOrEmpty(Lab))

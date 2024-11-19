@@ -1,5 +1,9 @@
 
+using System.Runtime.InteropServices;
 using McMaster.Extensions.CommandLineUtils;
+
+using Lab4.Utils;
+
 
 namespace Lab4.Commands;
 
@@ -17,7 +21,15 @@ public class SetPathCommand
             return;
         }
 
-        Environment.SetEnvironmentVariable("LAB_PATH", Path, EnvironmentVariableTarget.Machine);
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            UnixEnvironmentUtil.SetEnvironmentVariableUnix("LAB_PATH", Path);
+        }
+        else
+        {
+            Environment.SetEnvironmentVariable("LAB_PATH", Path, EnvironmentVariableTarget.Machine);
+        }
+
         console.WriteLine($"LAB_PATH set to: {Path}");
     }
 }

@@ -49,8 +49,10 @@ EOL
       dotnet run
       dotnet run -- version
 
-      dotnet run -- run lab1 --input /vagrant/Lab1/input.txt
-      echo "Lab1 output:"
+      sudo dotnet run -- set-path -p /vagrant/Lab4
+
+      sudo dotnet run -- run lab1 --input /vagrant/Lab1/input.txt
+      echo "Lab1 output (that is saved to LAB_PATH):"
       cat /root/output.txt
     SHELL
   end
