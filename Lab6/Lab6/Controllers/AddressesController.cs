@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 using Lab6.Data;
 
 namespace Lab6.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class AddressesController : ControllerBase

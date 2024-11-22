@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 using Lab6.Data;
 
@@ -14,7 +15,7 @@ public class SearchCriteria
     public string? OrderStatusEndsWith { get; set; }
 }
 
-
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class SearchController : ControllerBase
