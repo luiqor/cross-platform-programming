@@ -1,0 +1,33 @@
+﻿@model Lab5Lab6.Models.UserProfileViewModel
+@{
+    ViewData["Title"] = "User Profile";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <h2>@ViewData["Title"].</h2>
+            <div class="col-md-2">
+                <img src="@Model.ProfileImage"
+                     alt="" class="img-rounded img-responsive" />
+            </div>
+            <div class="col-md-4">
+                <p>
+                    <i>🪪</i> @Model.FullName
+                </p>
+                <p>
+                    <i>👤</i> @Model.Username
+                </p>
+                <p>
+                    <i>✉️</i> @Model.Email
+                </p>
+                <p>
+                    <i>📱</i> @Model.PhoneNumber
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<form asp-controller="Account" asp-action="Logout" method="post">
+    <button type="submit" class="btn btn-primary">Logout</button>
+</form>
