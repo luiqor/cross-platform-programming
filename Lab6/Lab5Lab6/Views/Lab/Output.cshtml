@@ -1,0 +1,11 @@
+@{
+    ViewData["Title"] = "Output Page";
+}
+
+<div class="container mt-5">
+    <h2>Output</h2>
+    <h4>@ViewBag.Answer</h4>
+    <p>The output is for Lab №@ViewBag.Number with input:</p>
+    <pre>@ViewBag.InputData</pre>
+    <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Go home</a>
+</div>
