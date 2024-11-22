@@ -42,17 +42,13 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-var audience = builder.Configuration["Auth0:Audience"];
-var issuer = builder.Configuration["Auth0:IssuerBaseURL"];
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = issuer;
-        options.Audience = audience;
+        options.Authority = builder.Configuration["Auth0:Authority"];
+        options.Audience = builder.Configuration["Auth0:ManagementApiAudience"];
     });
-
-
 
 builder.Services.AddAuthorization();
 
