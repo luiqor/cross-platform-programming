@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace Lab6.Models;
-using System.Net;
 
 public class CustomerAddress
 {
