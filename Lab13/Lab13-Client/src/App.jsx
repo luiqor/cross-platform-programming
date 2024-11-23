@@ -4,7 +4,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { AppRoute, LabRoute } from "./constants/constants";
-import { Home } from "./pages/pages";
+import { Home, Login } from "./pages/pages";
 import { Layout } from "./components/components";
 
 const App = () => {
@@ -18,7 +18,7 @@ const App = () => {
         path: AppRoute.ROOT,
       },
       {
-        element: <div>Login</div>,
+        element: <Login />,
         path: AppRoute.LOGIN,
       },
       {
