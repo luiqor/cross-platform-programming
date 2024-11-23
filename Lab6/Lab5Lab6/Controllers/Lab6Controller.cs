@@ -1,35 +1,29 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 using Lab5Lab6.Services;
+using System.Text.Json;
 
 namespace Lab5Lab6.Controllers;
 
-public class SearchCriteria
-{
-    public DateTime? StartDate { get; set; }
-    public DateTime? EndDate { get; set; }
-    public List<int>? ProductIds { get; set; }
-    public string? OrderStatusStartsWith { get; set; }
-    public string? OrderStatusEndsWith { get; set; }
-}
 
-public class ExternalApiController : Controller
+[Authorize]
+public class Lab6Controller : Controller
 {
     private readonly IExternalApiService _externalApiService;
 
-    public ExternalApiController(IExternalApiService externalApiService)
+    public Lab6Controller(IExternalApiService externalApiService)
     {
         _externalApiService = externalApiService;
     }
 
-    // Отримати всі адреси
-    public async Task<IActionResult> GetAddresses()
+    [HttpGet]
+    public async Task<IActionResult> Addresses()
     {
         try
         {
             var result = await _externalApiService.GetDataFromApiAsync("/api/Addresses");
-
-            return View("Addresses", result);
+            var data = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(result);
+            return View("Addresses", data);
         }
         catch (Exception ex)
         {
@@ -38,14 +32,14 @@ public class ExternalApiController : Controller
         }
     }
 
-    // Отримати адресу за ID
-    public async Task<IActionResult> GetAddress(int id)
+    [HttpGet]
+    public async Task<IActionResult> Address(int id)
     {
         try
         {
             var result = await _externalApiService.GetDataFromApiAsync($"/api/Addresses/{id}");
-
-            return View("AddressDetail", result);
+            var data = JsonSerializer.Deserialize<Dictionary<string, object>>(result);
+            return View("AddressDetail", data);
         }
         catch (Exception ex)
         {
@@ -54,14 +48,14 @@ public class ExternalApiController : Controller
         }
     }
 
-    // Отримати всі замовлення
-    public async Task<IActionResult> GetOrders()
+    [HttpGet]
+    public async Task<IActionResult> Orders()
     {
         try
         {
             var result = await _externalApiService.GetDataFromApiAsync("/api/Orders");
-
-            return View("Orders", result);
+            var data = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(result);
+            return View("Orders", data);
         }
         catch (Exception ex)
         {
@@ -70,14 +64,14 @@ public class ExternalApiController : Controller
         }
     }
 
-    // Отримати замовлення за ID
-    public async Task<IActionResult> GetOrder(int id)
+    [HttpGet]
+    public async Task<IActionResult> Order(int id)
     {
         try
         {
             var result = await _externalApiService.GetDataFromApiAsync($"/api/Orders/{id}");
-
-            return View("OrderDetail", result);
+            var data = JsonSerializer.Deserialize<Dictionary<string, object>>(result);
+            return View("OrderDetail", data);
         }
         catch (Exception ex)
         {
@@ -86,14 +80,14 @@ public class ExternalApiController : Controller
         }
     }
 
-    // Отримати всі продукти
-    public async Task<IActionResult> GetProducts()
+    [HttpGet]
+    public async Task<IActionResult> Products()
     {
         try
         {
             var result = await _externalApiService.GetDataFromApiAsync("/api/Products");
-
-            return View("Products", result);
+            var data = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(result);
+            return View("Products", data);
         }
         catch (Exception ex)
         {
@@ -102,14 +96,14 @@ public class ExternalApiController : Controller
         }
     }
 
-    // Отримати продукт за ID
-    public async Task<IActionResult> GetProduct(int id)
+    [HttpGet]
+    public async Task<IActionResult> Product(int id)
     {
         try
         {
             var result = await _externalApiService.GetDataFromApiAsync($"/api/Products/{id}");
-
-            return View("ProductDetail", result);
+            var data = JsonSerializer.Deserialize<Dictionary<string, object>>(result);
+            return View("ProductDetail", data);
         }
         catch (Exception ex)
         {
@@ -118,15 +112,20 @@ public class ExternalApiController : Controller
         }
     }
 
-    // Пошук замовлень
+    [HttpGet]
+    public IActionResult SearchOrders()
+    {
+        return View("SearchOrders");
+    }
+
     [HttpPost]
-    public async Task<IActionResult> SearchOrders(SearchCriteria criteria)
+    public async Task<IActionResult> SearchOrders(SearchCriteriaViewModel criteria)
     {
         try
         {
             var result = await _externalApiService.PostDataToApiAsync("/api/Search/orders", criteria);
-
-            return View("SearchResults", result);
+            var data = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(result);
+            return View("SearchResults", data);
         }
         catch (Exception ex)
         {

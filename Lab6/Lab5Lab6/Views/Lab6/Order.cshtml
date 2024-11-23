@@ -1,0 +1,24 @@
+@model Dictionary<string, object>
+
+<h1>Order Detail</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var kvp in Model)
+        {
+            <tr>
+                <td>@kvp.Key</td>
+                <td>@kvp.Value</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <a asp-action="GetOrders">Back to List</a>
+</div>
