@@ -15,11 +15,13 @@ public class Auth0UserService
     private readonly string _clientSecret;
     private readonly string _audience;
     private readonly IConfiguration _configuration;
-    public static string? _accessToken;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public Auth0UserService(IConfiguration configuration)
+    public Auth0UserService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
     {
         _configuration = configuration;
+        _httpContextAccessor = httpContextAccessor;
+
         _domain = _configuration["Auth0:Domain"] ?? throw new ArgumentNullException(nameof(configuration));
         _clientId = _configuration["Auth0:ClientId"] ?? throw new ArgumentNullException(nameof(configuration));
         _clientSecret = _configuration["Auth0:ClientSecret"] ?? throw new ArgumentNullException(nameof(configuration));
@@ -69,13 +71,11 @@ public class Auth0UserService
             Password = model.Password,
             Scope = "openid profile email"
         });
+        SetToken(authResponse.AccessToken);
 
         ManagementApiClient managementClient = new(authResponse.AccessToken, new Uri($"https://{_domain}/api/v2"));
-        _accessToken = authResponse.AccessToken;
-
         UserInfo userInfo = await authClient.GetUserInfoAsync(authResponse.AccessToken);
         User user = await managementClient.Users.GetAsync(userInfo.UserId);
-
 
         return new UserProfileViewModel
         {
@@ -87,4 +87,39 @@ public class Auth0UserService
         };
     }
 
+    public void SetToken(string token)
+    {
+        var httpContext = _httpContextAccessor.HttpContext;
+
+        if (httpContext == null)
+        {
+            throw new InvalidOperationException("HttpContext is not available.");
+        }
+
+        var options = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTime.UtcNow.AddHours(1)
+        };
+        httpContext.Response.Cookies.Append("accessToken", token, options);
+    }
+
+    public string GetToken()
+    {
+        var httpContext = _httpContextAccessor.HttpContext;
+        if (httpContext == null)
+        {
+            throw new UnauthorizedAccessException("HttpContext is not available.");
+        }
+
+        string token = httpContext.Request.Cookies["accessToken"]!;
+        if (string.IsNullOrEmpty(token))
+        {
+            throw new UnauthorizedAccessException("Access token is missing or expired.");
+        }
+
+        return token;
+    }
 }

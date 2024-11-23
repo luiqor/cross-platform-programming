@@ -15,16 +15,24 @@ public interface IExternalApiService
 public class Lab6Service : IExternalApiService
 {
     private readonly HttpClient _httpClient;
+    private readonly Auth0UserService _auth0UserService;
 
-    public Lab6Service(HttpClient httpClient)
+    public Lab6Service(HttpClient httpClient, Auth0UserService Auth0UserService)
     {
         _httpClient = httpClient;
-        _httpClient.BaseAddress = new Uri("http://localhost:5050");
+        _auth0UserService = Auth0UserService;
     }
+
 
     public async Task<string> GetDataFromApiAsync(string endpoint)
     {
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Auth0UserService._accessToken);
+        if (string.IsNullOrEmpty(_auth0UserService.GetToken()))
+        {
+            throw new InvalidOperationException("User is not authorized.");
+        }
+
+        _httpClient.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", _auth0UserService.GetToken());
 
         var response = await _httpClient.GetAsync(endpoint);
 
@@ -38,7 +46,13 @@ public class Lab6Service : IExternalApiService
 
     public async Task<string> PostDataToApiAsync(string endpoint, object data)
     {
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Auth0UserService._accessToken);
+        if (string.IsNullOrEmpty(_auth0UserService.GetToken()))
+        {
+            throw new InvalidOperationException("User is not authorized.");
+        }
+
+        _httpClient.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", _auth0UserService.GetToken());
 
         string jsonData = JsonConvert.SerializeObject(data);
 
