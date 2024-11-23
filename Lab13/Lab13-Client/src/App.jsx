@@ -4,7 +4,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { AppRoute, LabRoute } from "./constants/constants";
-import { Home, Login } from "./pages/pages";
+import { Home, Login, Lab1 } from "./pages/pages";
 import { Layout } from "./components/components";
 
 const App = () => {
@@ -33,7 +33,7 @@ const App = () => {
         path: AppRoute.LAB,
         children: [
           {
-            element: <div>LAB1</div>,
+            element: <Lab1 />,
             path: LabRoute.LAB1,
           },
           {
