@@ -1,0 +1,25 @@
+@model List<Dictionary<string, object>>
+
+<h1>Products</h1>
+
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            @foreach (var key in Model.FirstOrDefault()?.Keys ?? Enumerable.Empty<string>())
+            {
+                <th class="text-center">@key</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @foreach (var value in item.Values)
+                {
+                    <td class="text-center">@value</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

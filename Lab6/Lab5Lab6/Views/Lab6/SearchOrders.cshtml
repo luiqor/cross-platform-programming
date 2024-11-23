@@ -1,0 +1,27 @@
+@model SearchCriteriaViewModel
+
+<h1>Search Orders</h1>
+
+<form asp-action="SearchOrders" method="post">
+    <div class="form-group">
+        <label asp-for="StartDate">Start Date</label>
+        <input asp-for="StartDate" class="form-control" type="date" />
+    </div>
+    <div class="form-group">
+        <label asp-for="EndDate">End Date</label>
+        <input asp-for="EndDate" class="form-control" type="date" />
+    </div>
+    <div class="form-group">
+        <label asp-for="ProductIds">Product IDs (comma-separated)</label>
+        <input asp-for="ProductIds" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="OrderStatusStartsWith">Order Status Starts With</label>
+        <input asp-for="OrderStatusStartsWith" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="OrderStatusEndsWith">Order Status Ends With</label>
+        <input asp-for="OrderStatusEndsWith" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>

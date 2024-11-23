@@ -1,0 +1,154 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<section>
+    <div class="text-center">
+        <h1>Лабораторна №5</h1>
+    
+    </div>
+    <div>
+        <h2>Веб застосунок (ASP.NET Core MVC) складається з двох проектів:</h2>
+        <p> a.	Безпосередньо веб додаток </p>
+        <p> b.	Бібліотека класів, що дає змогу запускати практичні 1, 2 або 3</p>
+    </div>
+</section>
+<section>
+    <h3>Сторінка логіну, реєстрації та профілю користувача:</h3>
+    <div class="container mt-3 mb-4">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Логін</h5>
+                        <p class="card-text">Увійдіть до свого облікового запису.</p>
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-primary">Увійти</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Реєстрація</h5>
+                        <p class="card-text">Створіть новий обліковий запис.</p>
+                        <a href="@Url.Action("Register", "Account")" class="btn btn-primary">Зареєструватися</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Профіль користувача</h5>
+                        <p class="card-text">Перегляньте свій профіль.</p>
+                        <a href="@Url.Action("Profile", "Account")" class="btn btn-primary">Профіль</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <h3>Сторінки практичних завдань:</h3>
+    <div class="container mt-3">
+            <div class="row">
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Лаб №1</h5>
+                        <p class="card-text">Запустіть практичну 1 та отримайте результат.</p>
+                        <a href="@Url.Action("Lab1", "Lab")" class="btn btn-primary">Го</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Лаб №2</h5>
+                        <p class="card-text">Запустіть практичну 2 та отримайте результат.</p>
+                        <a href="@Url.Action("Lab2", "Lab")" class="btn btn-primary">Го</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Лаб №3</h5>
+                        <p class="card-text">Запустіть практичну 3 та отримайте результат.</p>
+                        <a href="@Url.Action("Lab3", "Lab")" class="btn btn-primary">Го</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <h3>Сторінка лабораторної роботи №6:</h3>
+    <div class="container mt-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Addresses</h5>
+                            <p class="card-text">Результати звернення до ендпоїнту Lab6</p>
+                            <a href="@Url.Action("Addresses", "Lab6")" class="btn btn-primary">Го</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Address</h5>
+                            <p class="card-text">Результати звернення до ендпоїнту Lab6 (приклад для id=1)</p>
+                            <a href="@Url.Action("Address", "Lab6", new { id = 1 })" class="btn btn-primary">Го</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Products</h5>
+                            <p class="card-text">Результати звернення до ендпоїнту Lab6</p>
+                            <a href="@Url.Action("Products", "Lab6")" class="btn btn-primary">Го</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Orders</h5>
+                            <p class="card-text">Результати звернення до ендпоїнту Lab6</p>
+                            <a href="@Url.Action("Orders", "Lab6")" class="btn btn-primary">Го</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Order</h5>
+                            <p class="card-text">Результати звернення до ендпоїнту Lab6 (приклад для id=1)</p>
+                            <a href="@Url.Action("Order", "Lab6", new { id = 1 })" class="btn btn-primary">Го</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">SearchOrders</h5>
+                            <p class="card-text">Пошук за критеріями з надсиланням запиту форми на Lab6</p>
+                            <a href="@Url.Action("SearchOrders", "Lab6")" class="btn btn-primary">Го</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Product</h5>
+                            <p class="card-text">Результати звернення до ендпоїнту Lab6 (приклад для id=1)</p>
+                            <a href="@Url.Action("Product", "Lab6", new { id = 1 })" class="btn btn-primary">Го</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</section>
