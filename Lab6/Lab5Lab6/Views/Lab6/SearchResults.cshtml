@@ -1,12 +1,13 @@
 @model List<Dictionary<string, object>>
 
 <h1>Search Results</h1>
-<table>
-    <thead>
+
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
         <tr>
             @foreach (var key in Model.FirstOrDefault()?.Keys ?? Enumerable.Empty<string>())
             {
-                <th>@key</th>
+                <th class="text-center">@key</th>
             }
         </tr>
     </thead>
@@ -16,7 +17,7 @@
             <tr>
                 @foreach (var value in item.Values)
                 {
-                    <td>@value</td>
+                    <td class="text-center">@value</td>
                 }
             </tr>
         }

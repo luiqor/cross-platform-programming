@@ -39,7 +39,7 @@ public class Lab6Controller : Controller
         {
             var result = await _externalApiService.GetDataFromApiAsync($"/api/Addresses/{id}");
             var data = JsonSerializer.Deserialize<Dictionary<string, object>>(result);
-            return View("AddressDetail", data);
+            return View("Address", data);
         }
         catch (Exception ex)
         {
@@ -71,7 +71,7 @@ public class Lab6Controller : Controller
         {
             var result = await _externalApiService.GetDataFromApiAsync($"/api/Orders/{id}");
             var data = JsonSerializer.Deserialize<Dictionary<string, object>>(result);
-            return View("OrderDetail", data);
+            return View("Order", data);
         }
         catch (Exception ex)
         {
@@ -103,7 +103,7 @@ public class Lab6Controller : Controller
         {
             var result = await _externalApiService.GetDataFromApiAsync($"/api/Products/{id}");
             var data = JsonSerializer.Deserialize<Dictionary<string, object>>(result);
-            return View("ProductDetail", data);
+            return View("Product", data);
         }
         catch (Exception ex)
         {
