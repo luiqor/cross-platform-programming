@@ -1,8 +1,7 @@
 using Lab13.Services;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,39 +13,44 @@ builder.Services.AddSwaggerGen();
 var domain = builder.Configuration["Auth0:Domain"];
 var audience = builder.Configuration["Auth0:Audience"];
 
-builder.Services.AddAuthentication(options =>
+// Налаштування Swagger
+builder.Services.AddSwaggerGen(options =>
 {
-    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddCookie(options =>
-{
-    options.Cookie.Name = "AuthToken";
-    options.Cookie.HttpOnly = true;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.None;
-    options.Cookie.SameSite = SameSiteMode.Strict;
-    options.Events = new CookieAuthenticationEvents
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Lab13 API", Version = "v1" });
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        OnRedirectToLogin = context =>
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Введіть JWT токен у форматі: Bearer {токен}"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
         {
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            return Task.CompletedTask;
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
         }
-    };
-})
-.AddJwtBearer(options =>
-{
-    options.Authority = $"https://{domain}/";
-    options.Audience = audience;
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true
-    };
+    });
 });
+
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = builder.Configuration["Auth0:Authority"];
+        options.Audience = builder.Configuration["Auth0:ManagementApiAudience"];
+    });
 
 builder.Services.AddAuthorization();
 

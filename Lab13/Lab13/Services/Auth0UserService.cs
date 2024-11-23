@@ -35,7 +35,7 @@ public class Auth0UserService
             grant_type = "password",
             username = model.Email,
             password = model.Password,
-            scope = "client_credentials",
+            scope = "openid profile email",
             client_id = _clientId,
             client_secret = _clientSecret
         };
