@@ -17,3 +17,5 @@ dotnet build Build.proj -p:Solution=Lab1 -t:Test
 - [x] LabLibrary - class library used in projects: `Lab4`
 - [x] Lab4 (Lab4 app, VM's for Lab4 in Vagrantfile)
 - [x] Lab5 (Lab5 MVC dotnet core app, VM `lab5_ubuntu` for Lab5 in Vagrantfile)
+- [x] Lab6
+- [x] Lab13
