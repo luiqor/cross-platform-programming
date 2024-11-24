@@ -49,4 +49,23 @@ public class AccountController(Auth0UserService auth0UserService) : ControllerBa
             return BadRequest(new { error = $"Error authenticating user: {ex.Message}" });
         }
     }
+
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] UserRegisterDto model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            await _auth0UserService.CreateUser(model);
+            return Ok(new { message = "User created successfully" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = $"Error creating user: {ex.Message}" });
+        }
+    }
 }

@@ -59,4 +59,34 @@ public class Auth0UserService
         return tokenResponse;
     }
 
+    public async Task CreateUser(UserRegisterDto model)
+    {
+
+        AuthenticationApiClient tokenClient = new(new Uri($"https://{_domain}"));
+        AccessTokenResponse tokenResponse = await tokenClient.GetTokenAsync(new ClientCredentialsTokenRequest
+        {
+            ClientId = _clientId,
+            ClientSecret = _clientSecret,
+            Audience = _audience
+        });
+
+        ManagementApiClient managementClient = new(tokenResponse.AccessToken, new Uri($"https://{_domain}/api/v2"));
+
+        UserCreateRequest userCreateRequest = new()
+        {
+            Email = model.Email,
+            UserName = model.Username,
+            EmailVerified = false,
+            Password = model.Password,
+            Connection = "Username-Password-Authentication",
+            UserMetadata = new
+            {
+                model.FullName,
+                model.PhoneNumber,
+            }
+        };
+
+        await managementClient.Users.CreateAsync(userCreateRequest);
+    }
+
 }

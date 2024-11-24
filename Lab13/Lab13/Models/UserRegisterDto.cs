@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Lab13.Models;
 
-public class UserRegisterViewModel
+public class UserRegisterDto
 {
     [Required]
     [StringLength(50, ErrorMessage = "Ім'я користувача не може перевищувати 50 символів.")]
