@@ -33,7 +33,7 @@ const Login = () => {
       }
 
       const result = await response.json();
-      throw new Error(result.message);
+      throw new Error(result.error);
     } catch (error) {
       setMessage(error.message ?? "Error submitting data");
     }
