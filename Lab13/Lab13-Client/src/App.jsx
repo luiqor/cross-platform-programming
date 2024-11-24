@@ -5,7 +5,7 @@ import {
   Outlet,
 } from "react-router-dom";
 import { AppRoute, LabRoute } from "./constants/constants";
-import { Home, Login, Lab1 } from "./pages/pages";
+import { Home, Login, Lab1, Register } from "./pages/pages";
 import { Layout, ProtectedRoute } from "./components/components";
 
 const App = () => {
@@ -23,7 +23,7 @@ const App = () => {
           path: AppRoute.LOGIN,
         },
         {
-          element: <div>REGISTER</div>,
+          element: <Register />,
           path: AppRoute.REGISTER,
         },
         {
