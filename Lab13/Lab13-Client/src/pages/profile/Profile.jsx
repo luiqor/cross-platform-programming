@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Image, Button } from "react-bootstrap";
-import { getCookie } from "../../helpers/helpers";
+import { getCookie, removeCookie } from "../../helpers/helpers";
+import { useNavigate } from "react-router-dom";
+import { AppRoute } from "../../constants/app-route";
 
 const Profile = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
+
+  const handleLogout = () => {
+    document.cookie = removeCookie("AuthToken");
+    navigate("/login");
+  };
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -22,6 +30,10 @@ const Profile = () => {
             "Content-Type": "application/json",
           },
         });
+
+        if (response.status === 401) {
+          handleLogout();
+        }
 
         if (!response.ok) {
           throw new Error("Failed to fetch user profile");
@@ -76,11 +88,9 @@ const Profile = () => {
           </Row>
         </Col>
       </Row>
-      <form action="/api/account/logout" method="post">
-        <Button type="submit" variant="primary">
-          Logout
-        </Button>
-      </form>
+      <Button onClick={handleLogout} variant="primary">
+        Logout
+      </Button>
     </Container>
   );
 };
