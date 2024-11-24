@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Authentication;
 
 using Lab13.Models;
 using Lab13.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Lab13.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/account")]
 [ApiController]
 public class AccountController(Auth0UserService auth0UserService) : ControllerBase
 {
@@ -69,6 +70,7 @@ public class AccountController(Auth0UserService auth0UserService) : ControllerBa
         }
     }
 
+    [Authorize]
     [HttpGet("profile")]
     public async Task<IActionResult> Profile()
     {
