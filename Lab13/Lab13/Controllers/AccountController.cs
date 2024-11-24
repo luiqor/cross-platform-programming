@@ -68,4 +68,24 @@ public class AccountController(Auth0UserService auth0UserService) : ControllerBa
             return BadRequest(new { error = $"Error creating user: {ex.Message}" });
         }
     }
+
+    [HttpGet("profile")]
+    public async Task<IActionResult> Profile()
+    {
+        var accessToken = Request.Cookies["AuthToken"];
+        if (string.IsNullOrEmpty(accessToken))
+        {
+            return Unauthorized(new { error = "Unauthorized" });
+        }
+
+        try
+        {
+            var userProfile = await _auth0UserService.GetUser(accessToken);
+            return Ok(userProfile);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = $"Error getting user profile: {ex.Message}" });
+        }
+    }
 }

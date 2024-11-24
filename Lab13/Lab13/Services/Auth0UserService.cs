@@ -1,12 +1,13 @@
-using Auth0.ManagementApi;
-using Auth0.ManagementApi.Models;
 using Auth0.AuthenticationApi;
 using Auth0.AuthenticationApi.Models;
-
-using Lab13.Models;
-using Lab13.Constants;
+using Auth0.ManagementApi;
+using Auth0.ManagementApi.Models;
 using Newtonsoft.Json;
 using System.Text;
+using System.Net.Http.Headers;
+using Newtonsoft.Json.Linq;
+
+using Lab13.Models;
 
 namespace Lab13.Services;
 
@@ -89,4 +90,44 @@ public class Auth0UserService
         await managementClient.Users.CreateAsync(userCreateRequest);
     }
 
+    public async Task<UserProfileDto> GetUser(string accessToken)
+    {
+        using var httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+        var userInfoResponse = await httpClient.GetAsync($"https://{_domain}/userinfo");
+        userInfoResponse.EnsureSuccessStatusCode();
+
+        var userInfoContent = await userInfoResponse.Content.ReadAsStringAsync();
+        var userInfo = JObject.Parse(userInfoContent);
+
+        var userId = userInfo["sub"]?.ToString();
+        if (string.IsNullOrEmpty(userId))
+        {
+            throw new Exception("Failed to retrieve user ID from /userinfo.");
+        }
+
+        AuthenticationApiClient tokenClient = new(new Uri($"https://{_domain}"));
+        AccessTokenResponse tokenResponse = await tokenClient.GetTokenAsync(new ClientCredentialsTokenRequest
+        {
+            ClientId = _clientId,
+            ClientSecret = _clientSecret,
+            Audience = _audience
+        });
+
+        ManagementApiClient managementClient = new(tokenResponse.AccessToken, new Uri($"https://{_domain}/api/v2"));
+        var user = await managementClient.Users.GetAsync(userId);
+
+        var userProfile = new UserProfileDto
+        {
+            Id = user.UserId,
+            Email = user.Email,
+            FullName = user.UserMetadata?["FullName"]?.ToString() ?? userInfo["name"]?.ToString() ?? string.Empty,
+            PhoneNumber = user.UserMetadata?["PhoneNumber"]?.ToString() ?? userInfo["phone_number"]?.ToString() ?? string.Empty,
+            ProfileImage = user.Picture ?? userInfo["picture"]?.ToString() ?? string.Empty,
+            Username = user.NickName ?? userInfo["nickname"]?.ToString() ?? string.Empty
+        };
+
+        return userProfile;
+    }
 }

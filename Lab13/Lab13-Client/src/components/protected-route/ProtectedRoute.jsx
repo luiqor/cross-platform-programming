@@ -1,11 +1,9 @@
 import { Navigate } from "react-router-dom";
 import { AppRoute } from "../../constants/constants";
+import { getCookie } from "../../helpers/helpers";
 
 const ProtectedRoute = ({ children }) => {
-  const authToken = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("AuthToken="))
-    ?.split("=")[1];
+  const authToken = getCookie("AuthToken");
 
   return authToken ? children : <Navigate to={AppRoute.LOGIN} />;
 };
