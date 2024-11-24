@@ -32,9 +32,9 @@ public class AccountController(Auth0UserService auth0UserService) : ControllerBa
 
             var cookieOptions = new CookieOptions
             {
-                HttpOnly = true,
-                Secure = false, // true if using HTTPS
-                SameSite = SameSiteMode.Strict,
+                HttpOnly = false,
+                Secure = false,
+                SameSite = SameSiteMode.Lax,
                 Expires = DateTime.UtcNow.AddSeconds(tokenResponse.ExpiresIn)
             };
             Response.Cookies.Append("AuthToken", tokenResponse.AccessToken, cookieOptions);

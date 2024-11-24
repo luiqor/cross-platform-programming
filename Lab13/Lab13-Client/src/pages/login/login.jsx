@@ -1,10 +1,13 @@
-import { useState } from 'react';
-import { Form, Button, Container } from 'react-bootstrap';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Form, Button, Container } from "react-bootstrap";
+import { AppRoute } from "../../constants/constants";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -15,17 +18,24 @@ const Login = () => {
     };
 
     try {
-      await fetch('/api/account/login', {
-        method: 'POST',
+      const response = await fetch("/api/account/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
-        credentials: 'include',
+        credentials: "include",
       });
 
+      if (response.ok) {
+        navigate(AppRoute.ROOT);
+        return;
+      }
+
+      const result = await response.json();
+      throw new Error(result.message);
     } catch (error) {
-      setMessage(result.message ?? 'Error submitting data');
+      setMessage(error.message ?? "Error submitting data");
     }
   };
 
@@ -56,12 +66,10 @@ const Login = () => {
         <Button variant="primary" type="submit">
           Login
         </Button>
-        <div className="text-danger mb-3">
-          {message}
-        </div>
+        <div className="text-danger mb-3">{message}</div>
       </Form>
     </Container>
   );
 };
 
-export { Login};
+export { Login };
