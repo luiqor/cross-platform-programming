@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { AppRoute, LabRoute } from '../../constants/constants';
+import "bootstrap/dist/css/bootstrap.min.css";
+import { AppRoute, LabRoute } from "../../constants/constants";
 
 const Home = () => {
   const [message, setMessage] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('/api/home')
-      .then(response => response.json())
-      .then(data => setMessage(data.message))
-      .catch(error => console.error('Error fetching data:', error));
+    fetch("/api/home")
+      .then((response) => response.json())
+      .then((data) => setMessage(data.message))
+      .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
   return (
@@ -23,7 +23,7 @@ const Home = () => {
         {message ? <p>{message}</p> : <p>Loading...</p>}
       </section>
       <section className="text-center">
-        <h1>Лабораторна №5</h1>
+        <h1>Лабораторна №13</h1>
       </section>
       <section>
         <h2>Веб застосунок (ASP.NET Core MVC) складається з двох проектів:</h2>
@@ -39,7 +39,14 @@ const Home = () => {
                 <Card.Body>
                   <Card.Title>Логін</Card.Title>
                   <Card.Text>Увійдіть до свого облікового запису.</Card.Text>
-                  <Button onClick={() => { navigate(AppRoute.LOGIN)}} variant="primary">Увійти</Button>
+                  <Button
+                    onClick={() => {
+                      navigate(AppRoute.LOGIN);
+                    }}
+                    variant="primary"
+                  >
+                    Увійти
+                  </Button>
                 </Card.Body>
               </Card>
             </Col>
@@ -48,7 +55,14 @@ const Home = () => {
                 <Card.Body>
                   <Card.Title>Реєстрація</Card.Title>
                   <Card.Text>Створіть новий обліковий запис.</Card.Text>
-                  <Button onClick={() => { navigate(AppRoute.REGISTER)}} variant="primary">Зареєструватися</Button>
+                  <Button
+                    onClick={() => {
+                      navigate(AppRoute.REGISTER);
+                    }}
+                    variant="primary"
+                  >
+                    Зареєструватися
+                  </Button>
                 </Card.Body>
               </Card>
             </Col>
@@ -57,7 +71,14 @@ const Home = () => {
                 <Card.Body>
                   <Card.Title>Профіль користувача</Card.Title>
                   <Card.Text>Перегляньте свій профіль.</Card.Text>
-                  <Button onClick={() => { navigate(AppRoute.PROFILE)}} variant="primary">Профіль</Button>
+                  <Button
+                    onClick={() => {
+                      navigate(AppRoute.PROFILE);
+                    }}
+                    variant="primary"
+                  >
+                    Профіль
+                  </Button>
                 </Card.Body>
               </Card>
             </Col>
@@ -72,8 +93,17 @@ const Home = () => {
               <Card className="text-center">
                 <Card.Body>
                   <Card.Title>Лаб №1</Card.Title>
-                  <Card.Text>Запустіть практичну 1 та отримайте результат.</Card.Text>
-                  <Button onClick={() => { navigate(`${AppRoute.LAB}/${LabRoute.LAB1}`)}} variant="primary">Го</Button>
+                  <Card.Text>
+                    Запустіть практичну 1 та отримайте результат.
+                  </Card.Text>
+                  <Button
+                    onClick={() => {
+                      navigate(`${AppRoute.LAB}/${LabRoute.LAB1}`);
+                    }}
+                    variant="primary"
+                  >
+                    Го
+                  </Button>
                 </Card.Body>
               </Card>
             </Col>
@@ -81,8 +111,17 @@ const Home = () => {
               <Card className="text-center">
                 <Card.Body>
                   <Card.Title>Лаб №2</Card.Title>
-                  <Card.Text>Запустіть практичну 2 та отримайте результат.</Card.Text>
-                  <Button onClick={() => { navigate(`${AppRoute.LAB}/${LabRoute.LAB2}`)}} variant="primary">Го</Button>
+                  <Card.Text>
+                    Запустіть практичну 2 та отримайте результат.
+                  </Card.Text>
+                  <Button
+                    onClick={() => {
+                      navigate(`${AppRoute.LAB}/${LabRoute.LAB2}`);
+                    }}
+                    variant="primary"
+                  >
+                    Го
+                  </Button>
                 </Card.Body>
               </Card>
             </Col>
@@ -90,8 +129,17 @@ const Home = () => {
               <Card className="text-center">
                 <Card.Body>
                   <Card.Title>Лаб №3</Card.Title>
-                  <Card.Text>Запустіть практичну 3 та отримайте результат.</Card.Text>
-                  <Button onClick={() => { navigate(`${AppRoute.LAB}/${LabRoute.LAB3}`)}} variant="primary">Го</Button>
+                  <Card.Text>
+                    Запустіть практичну 3 та отримайте результат.
+                  </Card.Text>
+                  <Button
+                    onClick={() => {
+                      navigate(`${AppRoute.LAB}/${LabRoute.LAB3}`);
+                    }}
+                    variant="primary"
+                  >
+                    Го
+                  </Button>
                 </Card.Body>
               </Card>
             </Col>
@@ -100,6 +148,6 @@ const Home = () => {
       </section>
     </Container>
   );
-}
+};
 
 export { Home };

@@ -1,10 +1,14 @@
 import { Container } from "react-bootstrap";
-import { Lab } from "../../components/lab/Lab";
+import { Lab } from "../../components/components";
 
 const Lab3 = () => {
   return (
     <Container className="mt-5">
-      <Lab index={3} handleSubmit={() => {}} errorMessage={undefined}>
+      <Lab
+        index={2}
+        endpoint={"/api/lab/lab3"}
+        defaultValue={"3 3 3\n1..\noo.\n...\n\nooo\n..o\n.oo\n\nooo\no..\no.2"}
+      >
         Розплющивши очі, Принц Персії виявив, що знаходиться на верхньому рівні
         підземного лабіринту Джаффара. Лабіринт складається з рівнів h,
         розташованих строго один під одним. Кожен рівень є прямокутним

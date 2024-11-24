@@ -1,10 +1,10 @@
 import { Container } from "react-bootstrap";
-import { Lab } from "../../components/lab/Lab";
+import { Lab } from "../../components/components";
 
 const Lab1 = () => {
   return (
     <Container className="mt-5">
-      <Lab index={1} handleSubmit={() => {}} errorMessage={undefined}>
+      <Lab index={1} endpoint={"/api/lab/lab1"} defaultValue={"3 2\n3 2"}>
         Розміщенням порядку K називають підмножина елементів деякої перестановки
         порядку N. Наприклад, (1, 3) – розміщення порядку 2 для перестановки (1,
         2, 3) порядку 3. Потрібно за заданим розміщенням визначити його позицію

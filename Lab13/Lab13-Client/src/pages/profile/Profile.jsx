@@ -16,13 +16,8 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchUserProfile = async () => {
-      const accessToken = getCookie("AuthToken");
-      if (!accessToken) {
-        setError("No access token found");
-        return;
-      }
-
       try {
+        const accessToken = getCookie("AuthToken");
         const response = await fetch("/api/account/profile", {
           method: "GET",
           headers: {

@@ -1,10 +1,14 @@
 import { Container } from "react-bootstrap";
-import { Lab } from "../../components/lab/Lab";
+import { Lab } from "../../components/components";
 
 const Lab2 = () => {
   return (
     <Container className="mt-5">
-      <Lab index={2} handleSubmit={() => {}} errorMessage={undefined}>
+      <Lab
+        index={2}
+        endpoint={"/api/lab/lab2"}
+        defaultValue={"3\n8:19:16\n2:05:11\n12:50:07"}
+      >
         Горе-бізнесмен закупив у Китаї велику партію наручних годинників, щоб
         продати їх на батьківщині за півціни (тобто в 5 разів дорожче, ніж вони
         коштували в Китаї). Бізнесмен зіткнувся з проблемою: китайські годинники
