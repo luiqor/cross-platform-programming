@@ -5,7 +5,15 @@ import {
   Outlet,
 } from "react-router-dom";
 import { AppRoute, LabRoute } from "./constants/constants";
-import { Home, Login, Lab1, Register, Profile } from "./pages/pages";
+import {
+  Home,
+  Login,
+  Lab1,
+  Register,
+  Profile,
+  Lab2,
+  Lab3,
+} from "./pages/pages";
 import { Layout, ProtectedRoute } from "./components/components";
 
 const App = () => {
@@ -47,11 +55,11 @@ const App = () => {
               path: LabRoute.LAB1,
             },
             {
-              element: <div>LAB2</div>,
+              element: <Lab2 />,
               path: LabRoute.LAB2,
             },
             {
-              element: <div>LAB3</div>,
+              element: <Lab3 />,
               path: LabRoute.LAB3,
             },
           ],
